@@ -9,6 +9,10 @@
   --vp-c-brand-3: #1d4ed8;
   --vp-c-brand-soft: rgba(59, 130, 246, 0.14);
 
+  /* 渐变色 */
+  --vp-c-gradient-start: #3b82f6;
+  --vp-c-gradient-end: #8b5cf6;
+
   /* Apifox 风格配色 */
   --vp-c-green: #10b981;
   --vp-c-green-soft: rgba(16, 185, 129, 0.14);
@@ -23,6 +27,33 @@
 
   /* 侧边栏宽度 */
   --vp-sidebar-width: 300px;
+}
+
+/* --- Hero 区域渐变 + 微光动画 --- */
+.VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(59, 130, 246, 0.12), transparent),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139, 92, 246, 0.08), transparent),
+    radial-gradient(ellipse 40% 40% at 20% 50%, rgba(59, 130, 246, 0.06), transparent);
+  animation: heroShimmer 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroShimmer {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.VPHomeHero {
+  background: linear-gradient(180deg, transparent 0%, var(--vp-c-bg) 100%);
 }
 
 /* --- 品牌字体 --- */
@@ -284,4 +315,86 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--vp-c-text-3) transparent;
+}
+
+/* --- 品牌渐变按钮 --- */
+.VPHero .VPButton.brand {
+  background: linear-gradient(135deg, var(--vp-c-gradient-start), var(--vp-c-gradient-end)) !important;
+  border: none !important;
+  color: #fff !important;
+  transition: opacity 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.VPHero .VPButton.brand:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.35);
+}
+
+.VPHero .VPButton.alt {
+  border-color: var(--vp-c-brand-1) !important;
+  color: var(--vp-c-brand-1) !important;
+}
+
+.VPHero .VPButton.alt:hover {
+  border-color: var(--vp-c-gradient-end) !important;
+  color: var(--vp-c-gradient-end) !important;
+}
+
+/* --- 滚动渐显动画 --- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* landing features 延迟出现 */
+.VPHomeFeatures .container .item {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.VPHomeFeatures .container .item:nth-child(1) { animation-delay: 0.1s; }
+.VPHomeFeatures .container .item:nth-child(2) { animation-delay: 0.2s; }
+.VPHomeFeatures .container .item:nth-child(3) { animation-delay: 0.3s; }
+.VPHomeFeatures .container .item:nth-child(4) { animation-delay: 0.4s; }
+.VPHomeFeatures .container .item:nth-child(5) { animation-delay: 0.5s; }
+.VPHomeFeatures .container .item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero 区域各元素依次入场 */
+.VPHero .name,
+.VPHero .text {
+  animation: fadeInUp 0.7s ease-out both;
+}
+
+.VPHero .text {
+  animation-delay: 0.15s;
+}
+
+.VPHero .tagline {
+  animation: fadeInUp 0.7s 0.25s ease-out both;
+}
+
+.VPHero .actions {
+  animation: fadeInUp 0.7s 0.4s ease-out both;
+}
+
+/* 文档内容区标题渐显 */
+.vp-doc h1 {
+  animation: fadeInUp 0.5s ease-out both;
 }
