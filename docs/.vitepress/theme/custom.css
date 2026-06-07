@@ -55,8 +55,9 @@
   animation: fadeInUp 0.7s ease-out both;
   background: linear-gradient(135deg, var(--vp-c-gradient-start), var(--vp-c-gradient-end));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .VPHero .text { animation-delay: 0.12s; }
@@ -157,7 +158,7 @@
 .VPSidebarItem.is-active > .item::before {
   content: '';
   position: absolute;
-  left: -8px;
+  left: 0;
   top: 6px;
   bottom: 6px;
   width: 3px;
@@ -253,12 +254,12 @@
   position: relative;
 }
 
-/* macOS 三色圆点 */
+/* macOS 三色圆点（行号模式下右移避让） */
 .vp-doc div[class*='language-']::before {
   content: '';
   position: absolute;
   top: 12px;
-  left: 16px;
+  left: 52px;
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -266,8 +267,13 @@
   box-shadow:
     20px 0 0 #febc2e,
     40px 0 0 #28c840;
-  z-index: 1;
+  z-index: 0;
   opacity: 0.8;
+}
+
+/* 无行号时代码块圆点靠左 */
+.vp-doc div[class*='language-']:not(.line-numbers-mode)::before {
+  left: 16px;
 }
 
 .vp-doc div[class*='language-'] pre {
@@ -403,6 +409,49 @@
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(26px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   产品简介特色卡片（feature-grid / feature-card）
+   ============================================ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.feature-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.feature-card h3 {
+  margin-top: 0 !important;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.feature-card h3 a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+
+.feature-card p {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  color: var(--vp-c-text-2);
 }
 
 /* ============================================
