@@ -44,11 +44,14 @@
   --vp-c-text-3: rgba(235, 235, 245, 0.48);
 }
 
-/* 暗色模式导航栏用实色背景，避免玻璃模糊的杂乱透底 */
-.dark .VPNav {
+/* 暗色模式：导航栏全系列实色背景，关闭所有玻璃模糊 */
+.dark .VPNav,
+.dark .VPNavBar,
+.dark .VPNavBar.has-sidebar,
+.dark .VPNavScreen {
   background: #0f172a !important;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* ============================================
