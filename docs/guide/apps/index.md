@@ -101,6 +101,13 @@ VS Code 插件 + 终端 AI 结对编程
 
 <div class="feature-card">
 
+### [ComfyUI 插件](/guide/apps/comfyui)
+Stable Diffusion 工作流平台，章鱼中枢生图节点
+
+</div>
+
+<div class="feature-card">
+
 ### [Dify](/guide/apps/dify)
 LLM 应用开发平台，可视化编排 AI 工作流
 
@@ -128,5 +135,5 @@ LLM 应用开发平台，可视化编排 AI 工作流
 | [Chatbox](/guide/apps/chatbox) | 桌面 | 模型设置页 |
 | [LobeChat](/guide/apps/lobechat) | Web | 语言模型设置 |
 | [NextChat](/guide/apps/nextchat) | Web | 自定义接口 |
-| [Dify](/guide/apps/dify) | 平台 | 模型供应商 |
+| [ComfyUI 插件](/guide/apps/comfyui) | 工作流 | 章鱼中枢生图节点 |
 | [沉浸式翻译 / Zotero](/guide/apps/plugins) | 插件 | 翻译服务 / GPT 首选项 |

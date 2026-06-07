@@ -52,6 +52,7 @@ const sidebar = {
         {
           text: '工作流与插件',
           items: [
+            { text: 'ComfyUI 插件', link: '/guide/apps/comfyui' },
             { text: 'Dify / N8N / Coze', link: '/guide/apps/dify' },
             { text: '沉浸式翻译 / Zotero', link: '/guide/apps/plugins' },
           ]
