@@ -35,23 +35,14 @@
 }
 
 .dark {
-  --glass-bg: rgba(15, 23, 42, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  /* 暗色模式玻璃变量改为实色 */
+  --glass-bg: #0f172a;
+  --glass-border: rgba(255, 255, 255, 0.06);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   --vp-c-text-1: rgba(235, 235, 245, 0.94);
   --vp-c-text-2: rgba(235, 235, 245, 0.72);
   --vp-c-text-3: rgba(235, 235, 245, 0.48);
-}
-
-/* 暗色模式：导航栏全系列实色背景，关闭所有玻璃模糊 */
-.dark .VPNav,
-.dark .VPNavBar,
-.dark .VPNavBar.has-sidebar,
-.dark .VPNavScreen {
-  background: #0f172a !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 /* ============================================
@@ -91,6 +82,12 @@
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--glass-border) !important;
+}
+
+/* 暗色模式关闭导航栏玻璃模糊 */
+.dark .VPNav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* ============================================
