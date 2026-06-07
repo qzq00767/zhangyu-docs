@@ -44,6 +44,13 @@
   --vp-c-text-3: rgba(235, 235, 245, 0.48);
 }
 
+/* 暗色模式导航栏用实色背景，避免玻璃模糊的杂乱透底 */
+.dark .VPNav {
+  background: #0f172a !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 /* ============================================
    Hero 区域 — 粒子画布背景
    ============================================ */
