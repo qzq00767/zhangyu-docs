@@ -83,12 +83,6 @@
   border-bottom: 1px solid var(--glass-border) !important;
 }
 
-.VPNav.has-sidebar {
-  background: var(--glass-bg) !important;
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-}
-
 /* ============================================
    品牌渐变按钮
    ============================================ */
@@ -177,29 +171,13 @@
 
 /* hover 微光扫过 */
 .VPSidebarItem .link {
-  position: relative;
-  overflow: hidden;
-  transition: color 0.2s, background 0.2s;
   border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
 }
 
 .VPSidebarItem .link:hover {
   color: var(--vp-c-brand-1);
-}
-
-.VPSidebarItem .link::after {
-  content: '';
-  position: absolute;
-  left: -100%;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.06), transparent);
-  transition: left 0.5s;
-}
-
-.VPSidebarItem .link:hover::after {
-  left: 100%;
+  background: rgba(59, 130, 246, 0.05);
 }
 
 /* 分组标题 */
@@ -326,7 +304,6 @@
    ============================================ */
 .vp-doc table {
   border-radius: 10px;
-  overflow: hidden;
   transition: box-shadow 0.3s;
 }
 
@@ -464,59 +441,41 @@
 }
 
 /* ============================================
-   响应式 — 移动端
+   响应式 — 仅微调，不破坏 VitePress 原生移动端布局
    ============================================ */
+
+/* 平板及以下：粒子性能 + Hero 缩小 */
 @media (max-width: 960px) {
-  .VPSidebar {
-    width: 100% !important;
-  }
-
-  .VPHomeFeatures .item {
-    border-radius: 12px !important;
-  }
-
-  /* 粒子画布在移动端禁用（性能） */
   .particle-canvas {
     display: none;
   }
 
-  /* Hero 移动端缩小 */
   .VPHero .name {
-    font-size: 1.8rem !important;
+    font-size: 2rem !important;
   }
 
   .VPHero .tagline {
-    font-size: 0.95rem !important;
-  }
-
-  .VPHero .actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .VPHero .VPButton {
-    text-align: center;
-    justify-content: center;
+    font-size: 1rem !important;
   }
 }
 
+/* 手机端：轻量适配 */
 @media (max-width: 640px) {
-  /* 侧边栏菜单占满全屏 */
-  .VPSidebar {
-    padding: 0 0.5rem;
+  /* 内容区间距 */
+  .vp-doc {
+    padding: 0 0.25rem;
   }
 
-  /* 内容区减小内边距 */
-  .vp-doc {
-    padding: 0 0.5rem;
+  .VPDoc {
+    padding: 0 0.75rem;
   }
 
   .vp-doc h1 {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
   }
 
   .vp-doc h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   /* feature 卡片单列 */
@@ -524,20 +483,7 @@
     grid-template-columns: 1fr;
   }
 
-  .feature-card {
-    padding: 1rem 1.25rem;
-  }
-
-  /* 导航栏移动端适配 */
-  .VPNav {
-    padding: 0 0.5rem;
-  }
-
-  .VPNavBarTitle .title {
-    font-size: 0.9rem;
-  }
-
-  /* 表格横向滚动 */
+  /* 表格可横向滚动 */
   .vp-doc table {
     display: block;
     overflow-x: auto;
@@ -545,12 +491,12 @@
     white-space: nowrap;
   }
 
-  /* 代码块缩小字号 */
+  /* 代码块缩小 */
   .vp-doc div[class*='language-'] pre {
     font-size: 0.78rem;
   }
 
-  /* macOS 圆点在小屏缩小 */
+  /* macOS 圆点缩小 */
   .vp-doc div[class*='language-']::before {
     width: 8px;
     height: 8px;
@@ -565,37 +511,29 @@
     padding-top: 1.8rem !important;
   }
 
-  /* Hero 图片隐藏（移动端） */
+  /* Hero 隐藏图片 */
   .VPHero .image {
     display: none;
   }
 
   .VPHero .name {
-    font-size: 1.5rem !important;
+    font-size: 1.45rem !important;
   }
 
-  /* 搜索按钮适配 */
-  .DocSearch-Button {
-    width: 36px;
-    height: 36px;
-    padding: 0;
+  .VPHero .tagline {
+    font-size: 0.9rem !important;
   }
 
-  .DocSearch-Button .DocSearch-Button-Placeholder {
-    display: none;
-  }
-
-  /* 玻璃拟态减少模糊（移动端性能） */
-  .VPNav,
-  .VPHomeFeatures .item,
-  .feature-card {
+  /* 导航栏轻量毛玻璃 */
+  .VPNav {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
 
-  /* 面包屑隐藏 */
-  .VPDoc .container .breadcrumb {
-    display: none;
+  .VPHomeFeatures .item,
+  .feature-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }
 
@@ -606,10 +544,6 @@
   }
 
   .VPHero .tagline {
-    font-size: 0.85rem !important;
-  }
-
-  .VPHomeFeatures .item {
-    padding: 1rem;
+    font-size: 0.82rem !important;
   }
 }
