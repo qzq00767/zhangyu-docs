@@ -455,9 +455,152 @@
 }
 
 /* ============================================
-   响应式
+   响应式 — 移动端
    ============================================ */
 @media (max-width: 960px) {
-  .VPSidebar { width: 100% !important; }
-  .VPHomeFeatures .item { border-radius: 12px !important; }
+  .VPSidebar {
+    width: 100% !important;
+  }
+
+  .VPHomeFeatures .item {
+    border-radius: 12px !important;
+  }
+
+  /* 粒子画布在移动端禁用（性能） */
+  .particle-canvas {
+    display: none;
+  }
+
+  /* Hero 移动端缩小 */
+  .VPHero .name {
+    font-size: 1.8rem !important;
+  }
+
+  .VPHero .tagline {
+    font-size: 0.95rem !important;
+  }
+
+  .VPHero .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .VPHero .VPButton {
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  /* 侧边栏菜单占满全屏 */
+  .VPSidebar {
+    padding: 0 0.5rem;
+  }
+
+  /* 内容区减小内边距 */
+  .vp-doc {
+    padding: 0 0.5rem;
+  }
+
+  .vp-doc h1 {
+    font-size: 1.5rem;
+  }
+
+  .vp-doc h2 {
+    font-size: 1.2rem;
+  }
+
+  /* feature 卡片单列 */
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    padding: 1rem 1.25rem;
+  }
+
+  /* 导航栏移动端适配 */
+  .VPNav {
+    padding: 0 0.5rem;
+  }
+
+  .VPNavBarTitle .title {
+    font-size: 0.9rem;
+  }
+
+  /* 表格横向滚动 */
+  .vp-doc table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* 代码块缩小字号 */
+  .vp-doc div[class*='language-'] pre {
+    font-size: 0.78rem;
+  }
+
+  /* macOS 圆点在小屏缩小 */
+  .vp-doc div[class*='language-']::before {
+    width: 8px;
+    height: 8px;
+    top: 10px;
+    left: 12px;
+    box-shadow:
+      14px 0 0 #febc2e,
+      28px 0 0 #28c840;
+  }
+
+  .vp-doc div[class*='language-'] pre {
+    padding-top: 1.8rem !important;
+  }
+
+  /* Hero 图片隐藏（移动端） */
+  .VPHero .image {
+    display: none;
+  }
+
+  .VPHero .name {
+    font-size: 1.5rem !important;
+  }
+
+  /* 搜索按钮适配 */
+  .DocSearch-Button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  .DocSearch-Button .DocSearch-Button-Placeholder {
+    display: none;
+  }
+
+  /* 玻璃拟态减少模糊（移动端性能） */
+  .VPNav,
+  .VPHomeFeatures .item,
+  .feature-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* 面包屑隐藏 */
+  .VPDoc .container .breadcrumb {
+    display: none;
+  }
+}
+
+/* 小屏手机 */
+@media (max-width: 375px) {
+  .VPHero .name {
+    font-size: 1.3rem !important;
+  }
+
+  .VPHero .tagline {
+    font-size: 0.85rem !important;
+  }
+
+  .VPHomeFeatures .item {
+    padding: 1rem;
+  }
 }
