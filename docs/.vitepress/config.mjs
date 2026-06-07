@@ -10,12 +10,21 @@ const sidebar = {
         { text: '产品简介', link: '/' },
         { text: '快速上手', link: '/guide/quickstart' },
         { text: '获取 Base URL 和 API Key', link: '/guide/base-url' },
+        { text: '从 OpenAI 迁移', link: '/guide/migration' },
         { text: '通知设置-WebHook', link: '/guide/webhook' },
+        { text: '生产接入建议', link: '/guide/best-practices' },
+      ]
+    },
+    {
+      text: 'AI 应用集成',
+      collapsed: false,
+      items: [
+        { text: '应用配置总览', link: '/guide/apps' },
       ]
     },
     {
       text: '聊天(Chat)',
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           text: 'Chat（聊天）',
@@ -77,6 +86,7 @@ const sidebar = {
       collapsed: true,
       items: [
         { text: '绘图模型接口', link: '/api/images' },
+        { text: '图片尺寸参考', link: '/api/image-sizes' },
       ]
     },
     {
@@ -103,10 +113,18 @@ const sidebar = {
       ]
     },
     {
-      text: '文件上传（Files）',
+      text: '内容审查与文件',
       collapsed: true,
       items: [
-        { text: '文件上传', link: '/api/files' },
+        { text: '内容审查（Moderations）', link: '/api/moderations' },
+        { text: '文件上传（Files）', link: '/api/files' },
+      ]
+    },
+    {
+      text: '账户管理',
+      collapsed: true,
+      items: [
+        { text: '余额查询', link: '/api/account' },
       ]
     },
     {
@@ -145,6 +163,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '指南', link: '/guide/quickstart' },
       { text: 'API 接口', link: '/api/chat' },
+      { text: 'AI 应用', link: '/guide/apps' },
       { text: '帮助', link: '/help' },
     ],
 
