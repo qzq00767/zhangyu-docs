@@ -1,8 +1,10 @@
 import DefaultTheme from 'vitepress/theme'
 import './custom.css'
 
-// 当前运行的粒子动画实例
 let particleCleanup = null
+
+// 判断是否为移动端
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 960
 
 export default {
   extends: DefaultTheme,
@@ -27,13 +29,11 @@ export default {
     }
     setTimeout(observeFadeIns, 100)
 
-    // 路由切换时重新观察 + 管理粒子生命周期
+    // 路由切换
     if (router) {
       router.onAfterRouteChanged = (to) => {
         setTimeout(observeFadeIns, 100)
-
-        // 只在首页渲染粒子
-        if (to === '/' || to === '') {
+        if (!isMobile() && (to === '/' || to === '')) {
           injectParticles()
         } else {
           destroyParticles()
@@ -41,61 +41,49 @@ export default {
       }
     }
 
-    // 首次加载：用 MutationObserver 等 VPHero 就绪
-    const injectOnReady = () => {
-      const hero = document.querySelector('.VPHero')
-      if (hero) {
-        injectParticles()
-      } else {
-        // DOM 未就绪，监听 body 变化
+    // 首次加载粒子（仅桌面端）
+    if (!isMobile()) {
+      setTimeout(() => {
+        const hero = document.querySelector('.VPHero')
+        if (hero) return injectParticles()
         const mo = new MutationObserver(() => {
-          const hero = document.querySelector('.VPHero')
-          if (hero) {
-            mo.disconnect()
-            injectParticles()
-          }
+          const h = document.querySelector('.VPHero')
+          if (h) { mo.disconnect(); injectParticles() }
         })
         mo.observe(document.body, { childList: true, subtree: true })
-        // 兜底超时
         setTimeout(() => mo.disconnect(), 5000)
-      }
+      }, 300)
     }
-    setTimeout(injectOnReady, 100)
   }
 }
 
 // ============================================
-// 粒子动画
+// 粒子动画（仅桌面端）
 // ============================================
 
 function injectParticles() {
   const hero = document.querySelector('.VPHero')
   if (!hero || hero.querySelector('.particle-canvas')) return
 
+  hero.style.position = 'relative'
+
   const canvas = document.createElement('canvas')
   canvas.className = 'particle-canvas'
   canvas.style.cssText =
     'position:absolute;inset:0;z-index:0;pointer-events:none;width:100%;height:100%'
-  hero.style.position = 'relative'
-  hero.style.overflow = 'hidden'
   hero.prepend(canvas)
 
   particleCleanup = startParticleAnim(canvas)
 }
 
 function destroyParticles() {
-  if (particleCleanup) {
-    particleCleanup()
-    particleCleanup = null
-  }
-  // 清理可能残留的 canvas
+  if (particleCleanup) { particleCleanup(); particleCleanup = null }
   document.querySelectorAll('.particle-canvas').forEach((c) => c.remove())
 }
 
 function startParticleAnim(canvas) {
   const ctx = canvas.getContext('2d')
-  let animId
-  let w, h
+  let animId, w, h
 
   const resize = () => {
     const parent = canvas.parentElement
@@ -107,40 +95,27 @@ function startParticleAnim(canvas) {
   resize()
 
   const particles = Array.from({ length: 45 }, () => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: Math.random() * 0.2 + 0.06,
-    r: Math.random() * 1.4 + 0.4,
-    alpha: Math.random() * 0.4 + 0.12,
+    x: Math.random() * w, y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.4, vy: Math.random() * 0.2 + 0.06,
+    r: Math.random() * 1.4 + 0.4, alpha: Math.random() * 0.4 + 0.12,
     reset() {
-      this.x = Math.random() * w
-      this.y = -8
-      this.vx = (Math.random() - 0.5) * 0.4
-      this.vy = Math.random() * 0.2 + 0.06
+      this.x = Math.random() * w; this.y = -8
+      this.vx = (Math.random() - 0.5) * 0.4; this.vy = Math.random() * 0.2 + 0.06
     }
   }))
 
   function draw() {
-    if (!canvas.isConnected) {
-      cancelAnimationFrame(animId)
-      return
-    }
+    if (!canvas.isConnected) { cancelAnimationFrame(animId); return }
     ctx.clearRect(0, 0, w, h)
-
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i]
-      p.x += p.vx
-      p.y += p.vy
+      p.x += p.vx; p.y += p.vy
       if (p.y > h + 8 || p.x < -8 || p.x > w + 8) p.reset()
-
       ctx.beginPath()
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
       ctx.fillStyle = `rgba(139, 92, 246, ${p.alpha})`
       ctx.fill()
     }
-
-    // 连线（仅前 15 个粒子之间，减少 O(n²) 计算）
     for (let i = 0; i < Math.min(particles.length, 20); i++) {
       for (let j = i + 1; j < Math.min(particles.length, 20); j++) {
         const dx = particles[i].x - particles[j].x
@@ -151,21 +126,13 @@ function startParticleAnim(canvas) {
           ctx.moveTo(particles[i].x, particles[i].y)
           ctx.lineTo(particles[j].x, particles[j].y)
           ctx.strokeStyle = `rgba(59, 130, 246, ${0.05 * (1 - dist / 100)})`
-          ctx.lineWidth = 0.5
-          ctx.stroke()
+          ctx.lineWidth = 0.5; ctx.stroke()
         }
       }
     }
     animId = requestAnimationFrame(draw)
   }
-
   draw()
-
   window.addEventListener('resize', resize)
-
-  // 返回清理函数
-  return () => {
-    cancelAnimationFrame(animId)
-    window.removeEventListener('resize', resize)
-  }
+  return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
 }
