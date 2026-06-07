@@ -17,9 +17,45 @@ const sidebar = {
     },
     {
       text: 'AI 应用集成',
-      collapsed: false,
+      collapsed: true,
       items: [
-        { text: '应用配置总览', link: '/guide/apps' },
+        { text: '配置总览', link: '/guide/apps/' },
+        {
+          text: '命令行工具',
+          items: [
+            { text: 'Claude Code', link: '/guide/apps/claude-code' },
+            { text: 'Codex CLI', link: '/guide/apps/codex-cli' },
+            { text: 'Gemini CLI', link: '/guide/apps/gemini-cli' },
+          ]
+        },
+        {
+          text: 'IDE 集成',
+          items: [
+            { text: 'Cursor', link: '/guide/apps/cursor' },
+            { text: 'Cline / Aider', link: '/guide/apps/cline' },
+          ]
+        },
+        {
+          text: '桌面客户端',
+          items: [
+            { text: 'Cherry Studio', link: '/guide/apps/cherry-studio' },
+            { text: 'Chatbox', link: '/guide/apps/chatbox' },
+          ]
+        },
+        {
+          text: 'Web 应用',
+          items: [
+            { text: 'LobeChat', link: '/guide/apps/lobechat' },
+            { text: 'NextChat', link: '/guide/apps/nextchat' },
+          ]
+        },
+        {
+          text: '工作流与插件',
+          items: [
+            { text: 'Dify / N8N / Coze', link: '/guide/apps/dify' },
+            { text: '沉浸式翻译 / Zotero', link: '/guide/apps/plugins' },
+          ]
+        },
       ]
     },
     {
@@ -163,7 +199,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '指南', link: '/guide/quickstart' },
       { text: 'API 接口', link: '/api/chat' },
-      { text: 'AI 应用', link: '/guide/apps' },
+      { text: 'AI 应用', link: '/guide/apps/' },
       { text: '帮助', link: '/help' },
     ],
 
