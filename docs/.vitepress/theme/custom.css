@@ -338,6 +338,18 @@
   background: linear-gradient(180deg, #2563eb, #7c3aed);
 }
 
+/* VitePress 侧边栏 OverlayScrollbars */
+.os-scrollbar-vertical {
+  --os-size: 3px;
+  width: 3px !important;
+}
+
+.os-scrollbar-handle {
+  background: linear-gradient(180deg, var(--vp-c-gradient-start), var(--vp-c-gradient-end)) !important;
+  border-radius: 2px !important;
+  max-width: 3px !important;
+}
+
 /* Firefox */
 html {
   scrollbar-width: thin;
