@@ -7,13 +7,13 @@
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/audio/transcriptions
+POST https://zhangyuapi.com/v1/audio/transcriptions
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/audio/transcriptions" \
+curl -X POST "https://zhangyuapi.com/v1/audio/transcriptions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -F "file=@audio.mp3" \
   -F "model=whisper-1" \
@@ -41,13 +41,13 @@ curl -X POST "https://{{BASE_URL}}/v1/audio/transcriptions" \
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/audio/speech
+POST https://zhangyuapi.com/v1/audio/speech
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/audio/speech" \
+curl -X POST "https://zhangyuapi.com/v1/audio/speech" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

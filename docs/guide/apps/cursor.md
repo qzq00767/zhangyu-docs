@@ -10,9 +10,9 @@ AI 驱动的代码编辑器，通过章鱼中枢 API 获得增强能力。
 
 | 设置项 | 值 |
 |--------|-----|
-| **OpenAI Base URL** | `https://{{BASE_URL}}/v1` |
+| **OpenAI Base URL** | `https://zhangyuapi.com/v1` |
 | **OpenAI API Key** | 你的章鱼中枢 API Key |
-| **Anthropic Base URL** | `https://{{BASE_URL}}` |
+| **Anthropic Base URL** | `https://zhangyuapi.com` |
 | **Anthropic API Key** | 同上（你的章鱼中枢 API Key） |
 
 ## 启用模型

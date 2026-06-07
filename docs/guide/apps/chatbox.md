@@ -16,7 +16,7 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 地址** | `https://{{BASE_URL}}/v1` |
+| **API 地址** | `https://zhangyuapi.com/v1` |
 | **API 密钥** | 你的章鱼中枢 API Key |
 | **模型** | 选择需要的模型（如 `gpt-4o`） |
 

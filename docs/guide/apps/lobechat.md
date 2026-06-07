@@ -10,7 +10,7 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 代理地址** | `https://{{BASE_URL}}/v1` |
+| **API 代理地址** | `https://zhangyuapi.com/v1` |
 | **API Key** | 你的章鱼中枢 API Key |
 
 ## 自定义模型
@@ -39,14 +39,14 @@ LobeChat 支持添加自定义模型列表：
 
 | 设置项 | 值 |
 |--------|-----|
-| **接口地址** | `https://{{BASE_URL}}` |
+| **接口地址** | `https://zhangyuapi.com` |
 | **API Key** | 你的章鱼中枢 API Key |
 
 ## Docker 部署
 
 ```bash
 docker run -d -p 3000:3000 \
-  -e BASE_URL=https://{{BASE_URL}} \
+  -e BASE_URL=https://zhangyuapi.com \
   -e OPENAI_API_KEY={{API_KEY}} \
   yidadaa/chatgpt-next-web
 ```
@@ -54,7 +54,7 @@ docker run -d -p 3000:3000 \
 ## Vercel 部署
 
 Fork 项目后，在 Vercel 环境变量中设置：
-- `BASE_URL` = `https://{{BASE_URL}}`
+- `BASE_URL` = `https://zhangyuapi.com`
 - `OPENAI_API_KEY` = 你的 API Key
 
 ::: tip 提示

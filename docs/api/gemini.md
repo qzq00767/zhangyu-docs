@@ -5,13 +5,13 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1beta/models/{model}:generateContent
+POST https://zhangyuapi.com/v1beta/models/{model}:generateContent
 ```
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1beta/models/gemini-2.5-flash:generateContent" \
+curl -X POST "https://zhangyuapi.com/v1beta/models/gemini-2.5-flash:generateContent" \
   -H "x-goog-api-key: {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -47,7 +47,7 @@ curl -X POST "https://{{BASE_URL}}/v1beta/models/gemini-2.5-flash:generateConten
 添加 `alt=sse` 查询参数启用流式返回：
 
 ```bash
-POST https://{{BASE_URL}}/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse
+POST https://zhangyuapi.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse
 ```
 
 ## 鉴权

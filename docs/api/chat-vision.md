@@ -5,7 +5,7 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/chat/completions
+POST https://zhangyuapi.com/v1/chat/completions
 ```
 
 ## 图片输入方式
@@ -15,7 +15,7 @@ POST https://{{BASE_URL}}/v1/chat/completions
 ### 方式一：Base64 编码
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -44,7 +44,7 @@ curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
 ### 方式二：图片 URL
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

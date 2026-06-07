@@ -16,7 +16,7 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 地址** | `https://{{BASE_URL}}/v1` |
+| **API 地址** | `https://zhangyuapi.com/v1` |
 | **API 密钥** | 你的章鱼中枢 API Key |
 
 ### 2. 管理模型

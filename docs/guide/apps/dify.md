@@ -14,7 +14,7 @@ Dify 支持 Docker 部署和云服务。详见 [Dify 官方文档](https://docs.
 
 | 设置项 | 值 |
 |--------|-----|
-| **API Base URL** | `https://{{BASE_URL}}/v1` |
+| **API Base URL** | `https://zhangyuapi.com/v1` |
 | **API Key** | 你的章鱼中枢 API Key |
 
 ## 添加模型
@@ -41,7 +41,7 @@ Dify 支持 Docker 部署和云服务。详见 [Dify 官方文档](https://docs.
 如果自部署 Dify，可在 `.env` 中预设：
 
 ```bash
-OPENAI_API_BASE=https://{{BASE_URL}}/v1
+OPENAI_API_BASE=https://zhangyuapi.com/v1
 OPENAI_API_KEY={{API_KEY}}
 ```
 
@@ -66,6 +66,6 @@ OPENAI_API_KEY={{API_KEY}}
 在 Coze 工作流中使用 **HTTP 请求** 节点，调用章鱼中枢 API：
 
 ```bash
-POST https://{{BASE_URL}}/v1/chat/completions
+POST https://zhangyuapi.com/v1/chat/completions
 Authorization: Bearer {{API_KEY}}
 ```

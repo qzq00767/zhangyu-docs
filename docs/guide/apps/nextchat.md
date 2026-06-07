@@ -10,14 +10,14 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **接口地址** | `https://{{BASE_URL}}` |
+| **接口地址** | `https://zhangyuapi.com` |
 | **API Key** | 你的章鱼中枢 API Key |
 
 ## Docker 一键部署
 
 ```bash
 docker run -d -p 3000:3000 \
-  -e BASE_URL=https://{{BASE_URL}} \
+  -e BASE_URL=https://zhangyuapi.com \
   -e OPENAI_API_KEY={{API_KEY}} \
   yidadaa/chatgpt-next-web
 ```
@@ -27,7 +27,7 @@ docker run -d -p 3000:3000 \
 1. Fork [ChatGPT-Next-Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
 2. 在 Vercel 导入项目
 3. 设置环境变量：
-   - `BASE_URL` = `https://{{BASE_URL}}`
+   - `BASE_URL` = `https://zhangyuapi.com`
    - `OPENAI_API_KEY` = 你的 API Key
 
 ## 功能

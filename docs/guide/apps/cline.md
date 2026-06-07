@@ -14,7 +14,7 @@ VS Code 扩展，在编辑器中直接使用 AI 编程助手。
 
 | 设置项 | 值 |
 |--------|-----|
-| **Base URL** | `https://{{BASE_URL}}/v1` |
+| **Base URL** | `https://zhangyuapi.com/v1` |
 | **API Key** | 你的章鱼中枢 API Key |
 | **Model ID** | `gpt-4o` 或 `claude-sonnet-4-6` |
 
@@ -48,7 +48,7 @@ pip install aider-chat
 ## 配置
 
 ```bash
-export OPENAI_API_BASE="https://{{BASE_URL}}/v1"
+export OPENAI_API_BASE="https://zhangyuapi.com/v1"
 export OPENAI_API_KEY="{{API_KEY}}"
 ```
 

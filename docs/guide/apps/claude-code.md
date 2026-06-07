@@ -20,7 +20,7 @@ npm install -g @anthropic-ai/claude-code
 {
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "{{API_KEY}}",
-    "ANTHROPIC_BASE_URL": "https://{{BASE_URL}}"
+    "ANTHROPIC_BASE_URL": "https://zhangyuapi.com"
   }
 }
 ```

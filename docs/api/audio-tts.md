@@ -5,13 +5,13 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/audio/speech
+POST https://zhangyuapi.com/v1/audio/speech
 ```
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/audio/speech" \
+curl -X POST "https://zhangyuapi.com/v1/audio/speech" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

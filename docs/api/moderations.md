@@ -5,13 +5,13 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/moderations
+POST https://zhangyuapi.com/v1/moderations
 ```
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/moderations" \
+curl -X POST "https://zhangyuapi.com/v1/moderations" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

@@ -5,13 +5,13 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/chat/completions
+POST https://zhangyuapi.com/v1/chat/completions
 ```
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -87,7 +87,7 @@ curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
 ## 提交工具执行结果
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

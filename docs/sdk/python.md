@@ -10,7 +10,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://{{BASE_URL}}/v1",
+    base_url="https://zhangyuapi.com/v1",
     api_key="{{API_KEY}}"
 )
 
@@ -46,7 +46,7 @@ for chunk in stream:
 from anthropic import Anthropic
 
 client = Anthropic(
-    base_url="https://{{BASE_URL}}/v1",
+    base_url="https://zhangyuapi.com/v1",
     api_key="{{API_KEY}}"
 )
 
@@ -66,7 +66,7 @@ print(message.content[0].text)
 ```python
 import requests
 
-url = "https://{{BASE_URL}}/v1/chat/completions"
+url = "https://zhangyuapi.com/v1/chat/completions"
 headers = {
     "Authorization": "Bearer {{API_KEY}}",
     "Content-Type": "application/json"

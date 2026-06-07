@@ -7,13 +7,13 @@
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/rerank
+POST https://zhangyuapi.com/v1/rerank
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/rerank" \
+curl -X POST "https://zhangyuapi.com/v1/rerank" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

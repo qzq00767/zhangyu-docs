@@ -38,7 +38,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://{{BASE_URL}}/v1",  # ← 新增
+    base_url="https://zhangyuapi.com/v1",  # ← 新增
     api_key="{{API_KEY}}"
 )
 
@@ -59,7 +59,7 @@ response = client.chat.completions.create(
 import OpenAI from 'openai';
 
 const client = new OpenAI({
-  baseURL: 'https://{{BASE_URL}}/v1',  // ← 新增
+  baseURL: 'https://zhangyuapi.com/v1',  // ← 新增
   apiKey: '{{API_KEY}}'
 });
 
@@ -77,7 +77,7 @@ const response = await client.chat.completions.create({
 {
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "{{API_KEY}}",
-    "ANTHROPIC_BASE_URL": "https://{{BASE_URL}}"
+    "ANTHROPIC_BASE_URL": "https://zhangyuapi.com"
   }
 }
 ```
@@ -88,7 +88,7 @@ const response = await client.chat.completions.create({
 // ~/.codex/config.toml
 [model_providers.zhangyu]
 name = "OpenAI"
-base_url = "https://{{BASE_URL}}/v1"
+base_url = "https://zhangyuapi.com/v1"
 wire_api = "responses"
 requires_openai_auth = true
 ```
@@ -104,7 +104,7 @@ requires_openai_auth = true
 
 ```bash
 // ~/.gemini/.env
-GOOGLE_GEMINI_BASE_URL=https://{{BASE_URL}}
+GOOGLE_GEMINI_BASE_URL=https://zhangyuapi.com
 GEMINI_API_KEY={{API_KEY}}
 GEMINI_MODEL=gemini-2.5-flash
 ```
@@ -114,7 +114,7 @@ GEMINI_MODEL=gemini-2.5-flash
 在 Cursor 设置中：
 1. 打开 Settings → Models
 2. 取消勾选 OpenAI API Key
-3. 在 "OpenAI Base URL" 填入 `https://{{BASE_URL}}/v1`
+3. 在 "OpenAI Base URL" 填入 `https://zhangyuapi.com/v1`
 4. 在 "OpenAI API Key" 填入你的 API Key
 
 ### 通用 curl
@@ -126,7 +126,7 @@ curl https://api.openai.com/v1/chat/completions \
   -d '{ "model": "gpt-4o", "messages": [...] }'
 
 # 章鱼中枢 — 仅改 URL
-curl https://{{BASE_URL}}/v1/chat/completions \
+curl https://zhangyuapi.com/v1/chat/completions \
   -H "Authorization: Bearer {{API_KEY}}" \
   -d '{ "model": "gpt-4o", "messages": [...] }'
 ```
@@ -149,7 +149,7 @@ curl https://{{BASE_URL}}/v1/chat/completions \
 
 | 官方地址 | 替换为 |
 |---------|-------|
-| `https://api.openai.com` | `https://{{BASE_URL}}` |
-| `https://api.openai.com/v1` | `https://{{BASE_URL}}/v1` |
-| `https://api.anthropic.com` | `https://{{BASE_URL}}` |
-| `https://generativelanguage.googleapis.com` | `https://{{BASE_URL}}` |
+| `https://api.openai.com` | `https://zhangyuapi.com` |
+| `https://api.openai.com/v1` | `https://zhangyuapi.com/v1` |
+| `https://api.anthropic.com` | `https://zhangyuapi.com` |
+| `https://generativelanguage.googleapis.com` | `https://zhangyuapi.com` |

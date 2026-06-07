@@ -23,7 +23,7 @@ disable_response_storage = true
 
 [model_providers.zhangyu]
 name = "OpenAI"
-base_url = "https://{{BASE_URL}}/v1"
+base_url = "https://zhangyuapi.com/v1"
 wire_api = "responses"
 requires_openai_auth = true
 ```

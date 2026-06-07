@@ -5,13 +5,13 @@
 ## 接口地址
 
 ```bash
-GET https://{{BASE_URL}}/v1/models
+GET https://zhangyuapi.com/v1/models
 ```
 
 ## 请求示例
 
 ```bash
-curl "https://{{BASE_URL}}/v1/models" \
+curl "https://zhangyuapi.com/v1/models" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 
@@ -56,5 +56,5 @@ curl "https://{{BASE_URL}}/v1/models" \
 ## 获取单个模型
 
 ```bash
-GET https://{{BASE_URL}}/v1/models/gpt-4o
+GET https://zhangyuapi.com/v1/models/gpt-4o
 ```

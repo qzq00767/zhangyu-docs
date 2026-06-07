@@ -5,13 +5,13 @@
 ## <span class="api-method get">GET</span> 通过关键词搜索
 
 ```bash
-GET https://{{BASE_URL}}/v1/gpts/search?q=编程&limit=10
+GET https://zhangyuapi.com/v1/gpts/search?q=编程&limit=10
 ```
 
 ## <span class="api-method get">GET</span> 通过 ID 搜索
 
 ```bash
-GET https://{{BASE_URL}}/v1/gpts/g-xxxxxxxxxxxx
+GET https://zhangyuapi.com/v1/gpts/g-xxxxxxxxxxxx
 ```
 
 ## 响应示例

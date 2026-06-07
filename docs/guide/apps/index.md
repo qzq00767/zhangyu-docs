@@ -4,7 +4,7 @@
 
 ::: tip 通用规则
 几乎所有支持 OpenAI API 的应用，只需：
-- 将 API 地址替换为 `https://{{BASE_URL}}/v1`
+- 将 API 地址替换为 `https://zhangyuapi.com/v1`
 - 将 API Key 替换为你的章鱼中枢 Key
 :::
 

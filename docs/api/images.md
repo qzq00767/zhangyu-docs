@@ -7,13 +7,13 @@
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/images/generations
+POST https://zhangyuapi.com/v1/images/generations
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/images/generations" \
+curl -X POST "https://zhangyuapi.com/v1/images/generations" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -55,7 +55,7 @@ curl -X POST "https://{{BASE_URL}}/v1/images/generations" \
 ## <span class="api-method post">POST</span> 编辑图片
 
 ```bash
-POST https://{{BASE_URL}}/v1/images/edits
+POST https://zhangyuapi.com/v1/images/edits
 ```
 
 ## 支持的模型

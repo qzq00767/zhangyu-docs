@@ -14,7 +14,7 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 地址** | `https://{{BASE_URL}}/v1/chat/completions` |
+| **API 地址** | `https://zhangyuapi.com/v1/chat/completions` |
 | **API Key** | 你的章鱼中枢 API Key |
 | **模型** | `gpt-4o-mini`（推荐，翻译性价比高） |
 
@@ -53,7 +53,7 @@
 
 | 设置项 | 值 |
 |--------|-----|
-| **API URL** | `https://{{BASE_URL}}/v1/chat/completions` |
+| **API URL** | `https://zhangyuapi.com/v1/chat/completions` |
 | **API Key** | 你的章鱼中枢 API Key |
 | **模型** | `gpt-4o` |
 

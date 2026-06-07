@@ -7,7 +7,7 @@
 查询指定 API Key 的剩余额度。
 
 ```bash
-curl "https://{{BASE_URL}}/v1/account/token-balance" \
+curl "https://zhangyuapi.com/v1/account/token-balance" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 
@@ -38,7 +38,7 @@ curl "https://{{BASE_URL}}/v1/account/token-balance" \
 查询账户总余额。
 
 ```bash
-curl "https://{{BASE_URL}}/v1/account/user-balance" \
+curl "https://zhangyuapi.com/v1/account/user-balance" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 

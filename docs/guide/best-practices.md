@@ -61,7 +61,7 @@ from openai import OpenAI
 import httpx
 
 client = OpenAI(
-    base_url="https://{{BASE_URL}}/v1",
+    base_url="https://zhangyuapi.com/v1",
     api_key="sk-xxx",
     timeout=httpx.Timeout(300.0, connect=10.0)  # 300s 总超时
 )

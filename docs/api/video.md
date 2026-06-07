@@ -7,13 +7,13 @@
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/video/generations
+POST https://zhangyuapi.com/v1/video/generations
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/video/generations" \
+curl -X POST "https://zhangyuapi.com/v1/video/generations" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -46,7 +46,7 @@ curl -X POST "https://{{BASE_URL}}/v1/video/generations" \
 ### 查询视频生成状态
 
 ```bash
-GET https://{{BASE_URL}}/v1/video/generations/{task_id}
+GET https://zhangyuapi.com/v1/video/generations/{task_id}
 ```
 
 ::: tip 提示

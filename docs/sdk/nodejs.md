@@ -14,7 +14,7 @@ npm install openai
 import OpenAI from 'openai';
 
 const client = new OpenAI({
-  baseURL: 'https://{{BASE_URL}}/v1',
+  baseURL: 'https://zhangyuapi.com/v1',
   apiKey: '{{API_KEY}}'
 });
 
@@ -55,7 +55,7 @@ npm install @anthropic-ai/sdk
 import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({
-  baseURL: 'https://{{BASE_URL}}/v1',
+  baseURL: 'https://zhangyuapi.com/v1',
   apiKey: '{{API_KEY}}'
 });
 
@@ -73,7 +73,7 @@ console.log(message.content[0].text);
 ## 使用原生 fetch
 
 ```javascript
-const response = await fetch('https://{{BASE_URL}}/v1/chat/completions', {
+const response = await fetch('https://zhangyuapi.com/v1/chat/completions', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer {{API_KEY}}',

@@ -15,7 +15,7 @@ npm install -g @google/gemini-cli
 创建 `~/.gemini/.env`：
 
 ```bash
-GOOGLE_GEMINI_BASE_URL=https://{{BASE_URL}}
+GOOGLE_GEMINI_BASE_URL=https://zhangyuapi.com
 GEMINI_API_KEY={{API_KEY}}
 GEMINI_MODEL=gemini-2.5-flash
 ```

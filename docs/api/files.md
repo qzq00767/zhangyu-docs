@@ -7,13 +7,13 @@
 ### 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/files
+POST https://zhangyuapi.com/v1/files
 ```
 
 ### 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/files" \
+curl -X POST "https://zhangyuapi.com/v1/files" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -F "file=@training_data.jsonl" \
   -F "purpose=fine-tune"
@@ -38,21 +38,21 @@ curl -X POST "https://{{BASE_URL}}/v1/files" \
 ## <span class="api-method get">GET</span> 列出文件
 
 ```bash
-curl "https://{{BASE_URL}}/v1/files" \
+curl "https://zhangyuapi.com/v1/files" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 
 ## <span class="api-method get">GET</span> 获取文件信息
 
 ```bash
-curl "https://{{BASE_URL}}/v1/files/{file_id}" \
+curl "https://zhangyuapi.com/v1/files/{file_id}" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 
 ## <span class="api-method delete">DELETE</span> 删除文件
 
 ```bash
-curl -X DELETE "https://{{BASE_URL}}/v1/files/{file_id}" \
+curl -X DELETE "https://zhangyuapi.com/v1/files/{file_id}" \
   -H "Authorization: Bearer {{API_KEY}}"
 ```
 

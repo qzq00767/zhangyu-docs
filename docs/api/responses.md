@@ -5,7 +5,7 @@
 ## 接口地址
 
 ```bash
-POST https://{{BASE_URL}}/v1/responses
+POST https://zhangyuapi.com/v1/responses
 ```
 
 ## Responses API vs Chat API
@@ -21,7 +21,7 @@ POST https://{{BASE_URL}}/v1/responses
 ## 请求示例
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/responses" \
+curl -X POST "https://zhangyuapi.com/v1/responses" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{

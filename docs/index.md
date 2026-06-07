@@ -73,7 +73,7 @@ features:
 https://api.openai.com/v1/chat/completions
 
 # 章鱼中枢地址
-https://{{YOUR_BASE_URL}}/v1/chat/completions
+https://zhangyuapi.com/v1/chat/completions
 ```
 
 ### 鉴权方式
@@ -81,8 +81,8 @@ https://{{YOUR_BASE_URL}}/v1/chat/completions
 在请求 Header 的 `Authorization` 参数中，填入 Bearer Token：
 
 ```bash
-curl -X POST "https://{{YOUR_BASE_URL}}/v1/chat/completions" \
-  -H "Authorization: Bearer sk-xxxxxxxxxxxxxxxx" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
+  -H "Authorization: Bearer sk-你的API密钥" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o",
@@ -91,7 +91,9 @@ curl -X POST "https://{{YOUR_BASE_URL}}/v1/chat/completions" \
 ```
 
 ::: tip 提示
-部分应用或网站的 `API_Base` 为 `https://api.openai.com` 或 `https://api.openai.com/v1`，此时应替换为 `https://{{YOUR_BASE_URL}}` 或 `https://{{YOUR_BASE_URL}}/v1`。
+部分应用或网站的 `API_Base` 为 `https://api.openai.com` 或 `https://api.openai.com/v1`，此时应替换为 `https://zhangyuapi.com` 或 `https://zhangyuapi.com/v1`。
+
+**注意分清**：OpenAI SDK 类工具填 `https://zhangyuapi.com/v1`（带 /v1），Anthropic/Gemini 类填 `https://zhangyuapi.com`（不带 /v1）。详见 [Base URL 规则](/guide/base-url)。
 :::
 
 ## 功能对比

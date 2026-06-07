@@ -27,7 +27,7 @@
 ::: code-group
 
 ```bash [curl]
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -42,7 +42,7 @@ curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
 ```python [Python]
 import requests
 
-url = "https://{{BASE_URL}}/v1/chat/completions"
+url = "https://zhangyuapi.com/v1/chat/completions"
 headers = {
     "Authorization": "Bearer {{API_KEY}}",
     "Content-Type": "application/json"
@@ -60,7 +60,7 @@ print(response.json())
 ```
 
 ```javascript [Node.js]
-const response = await fetch("https://{{BASE_URL}}/v1/chat/completions", {
+const response = await fetch("https://zhangyuapi.com/v1/chat/completions", {
   method: "POST",
   headers: {
     "Authorization": "Bearer {{API_KEY}}",
@@ -86,7 +86,7 @@ console.log(data);
 如需流式返回（Server-Sent Events），添加 `"stream": true` 参数：
 
 ```bash
-curl -X POST "https://{{BASE_URL}}/v1/chat/completions" \
+curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
   -H "Authorization: Bearer {{API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{
