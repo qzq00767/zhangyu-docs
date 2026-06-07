@@ -1,0 +1,262 @@
+/* ============================================
+   章鱼中枢 API 文档 — 仿 Apifox 风格主题
+   ============================================ */
+
+/* --- CSS 变量（品牌色） --- */
+:root {
+  --vp-c-brand-1: #3b82f6;
+  --vp-c-brand-2: #2563eb;
+  --vp-c-brand-3: #1d4ed8;
+  --vp-c-brand-soft: rgba(59, 130, 246, 0.14);
+
+  /* Apifox 风格配色 */
+  --vp-c-green: #10b981;
+  --vp-c-green-soft: rgba(16, 185, 129, 0.14);
+  --vp-c-green-light: #34d399;
+  --vp-c-orange: #f59e0b;
+  --vp-c-orange-soft: rgba(245, 158, 11, 0.14);
+  --vp-c-orange-light: #fbbf24;
+  --vp-c-red: #ef4444;
+  --vp-c-red-soft: rgba(239, 68, 68, 0.14);
+  --vp-c-purple: #8b5cf6;
+  --vp-c-purple-soft: rgba(139, 92, 246, 0.14);
+
+  /* 侧边栏宽度 */
+  --vp-sidebar-width: 300px;
+}
+
+/* --- 品牌字体 --- */
+.VPHomeHero .name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(120deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.VPHomeHero .tagline {
+  font-size: 1.1rem;
+  color: var(--vp-c-text-2);
+}
+
+/* --- API 方法徽章（仿 Apifox GET/POST 标签） --- */
+.api-method {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.api-method.get {
+  background: var(--vp-c-green-soft);
+  color: var(--vp-c-green);
+}
+
+.api-method.post {
+  background: var(--vp-c-orange-soft);
+  color: var(--vp-c-orange);
+}
+
+.api-method.put {
+  background: rgba(59, 130, 246, 0.14);
+  color: #3b82f6;
+}
+
+.api-method.delete {
+  background: var(--vp-c-red-soft);
+  color: var(--vp-c-red);
+}
+
+.api-method.patch {
+  background: var(--vp-c-purple-soft);
+  color: var(--vp-c-purple);
+}
+
+/* API 端点路径样式 */
+.api-endpoint {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.9rem;
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+/* --- 侧边栏样式优化（靠近 Apifox 风格） --- */
+.VPSidebar {
+  border-right: 1px solid var(--vp-c-divider);
+}
+
+.VPSidebar .group {
+  border-top: none;
+  padding-top: 0;
+}
+
+.VPSidebarItem .text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.VPSidebarItem .caret {
+  font-size: 0.75rem;
+}
+
+/* 侧边栏分组标题 */
+.VPSidebarItem.isSidebarGroup > .item .text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--vp-c-text-2);
+}
+
+/* 侧边栏链接 */
+.VPSidebarItem .link .text {
+  font-size: 0.875rem;
+}
+
+/* --- 搜索框样式 --- */
+.DocSearch-Button {
+  border-radius: 8px !important;
+  background: var(--vp-c-bg-soft) !important;
+}
+
+/* --- 内容区 --- */
+.vp-doc h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.vp-doc h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.vp-doc h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+
+/* --- 表格样式（仿 Apifox 参数表） --- */
+.vp-doc table {
+  font-size: 0.875rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vp-doc thead th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc tbody td {
+  font-size: 0.875rem;
+}
+
+.vp-doc tbody td code {
+  font-size: 0.8rem;
+}
+
+/* --- 代码块 --- */
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.vp-doc div[class*='language-'] pre {
+  font-size: 0.875rem;
+}
+
+/* --- 自定义容器 --- */
+.vp-doc .custom-block {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.vp-doc .custom-block.tip {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.vp-doc .custom-block.warning {
+  border-color: var(--vp-c-orange);
+  background: var(--vp-c-orange-soft);
+}
+
+.vp-doc .custom-block.danger {
+  border-color: var(--vp-c-red);
+  background: var(--vp-c-red-soft);
+}
+
+/* --- 适配移动端 --- */
+@media (max-width: 960px) {
+  .VPSidebar {
+    width: 100% !important;
+  }
+}
+
+/* --- 产品简介页特色卡片 --- */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.1);
+}
+
+.feature-card h3 {
+  margin-top: 0 !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.feature-card p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+}
+
+/* --- 对比表格样式 --- */
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+  font-weight: 600;
+}
+
+.comparison-table .check {
+  color: var(--vp-c-green);
+}
+
+.comparison-table .cross {
+  color: var(--vp-c-red);
+}
