@@ -237,10 +237,6 @@ export default defineConfig({
     },
 
     // 编辑链接
-    editLink: {
-      pattern: 'https://github.com/qzq00767/zhangyu-docs/edit/main/docs/:path',
-      text: '在 GitHub 上编辑此页'
-    },
 
     // 最后更新时间
     lastUpdated: {
