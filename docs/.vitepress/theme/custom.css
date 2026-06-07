@@ -339,7 +339,7 @@
 }
 
 /* Firefox */
-* {
+html {
   scrollbar-width: thin;
   scrollbar-color: var(--vp-c-brand-1) transparent;
 }
@@ -461,6 +461,24 @@
 
 /* 手机端：轻量适配 */
 @media (max-width: 640px) {
+  /* 确保页面可滚动 */
+  html, body {
+    overflow: auto !important;
+    overscroll-behavior: auto;
+  }
+
+  /* 移动端侧边栏菜单 — 淡蓝色字体 */
+  .VPSidebar .text,
+  .VPSidebarItem .text,
+  .VPSidebarItem .link {
+    color: rgba(59, 130, 246, 0.85) !important;
+  }
+
+  .VPSidebarItem.is-active > .item .link {
+    color: #2563eb !important;
+    font-weight: 600;
+  }
+
   /* 内容区间距 */
   .vp-doc {
     padding: 0 0.25rem;
