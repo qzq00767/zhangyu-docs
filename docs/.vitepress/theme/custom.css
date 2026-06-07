@@ -156,7 +156,7 @@
    侧边栏 — 渐变指示条 + 微光扫过
    ============================================ */
 .VPSidebar {
-  background: transparent !important;
+  background: var(--vp-c-bg) !important;
 }
 
 /* 选中项：左侧渐变指示条 */
