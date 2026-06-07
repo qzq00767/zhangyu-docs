@@ -329,7 +329,10 @@
 /* ============================================
    渐变滚动条
    ============================================ */
-::-webkit-scrollbar {
+
+/* 全局滚动条 */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   width: 3px;
   height: 3px;
 }
@@ -347,12 +350,24 @@
   background: linear-gradient(180deg, #2563eb, #7c3aed);
 }
 
-/* VitePress 侧边栏 OverlayScrollbars */
+/* 侧边栏滚动条 */
+.VPSidebar::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+/* 内容区滚动容器 */
+.vp-doc::-webkit-scrollbar,
+main::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+/* 已废弃：VitePress 1.6.x 无 OverlayScrollbars，保留以防后续版本 */
 .os-scrollbar-vertical {
   --os-size: 3px;
   width: 3px !important;
 }
-
 .os-scrollbar-handle {
   background: linear-gradient(180deg, var(--vp-c-gradient-start), var(--vp-c-gradient-end)) !important;
   border-radius: 2px !important;
