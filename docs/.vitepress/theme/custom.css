@@ -467,15 +467,15 @@ html {
     overscroll-behavior: auto;
   }
 
-  /* 移动端侧边栏菜单 — 淡蓝色字体 */
+  /* 移动端侧边栏菜单 — 白色字体 */
   .VPSidebar .text,
   .VPSidebarItem .text,
   .VPSidebarItem .link {
-    color: rgba(59, 130, 246, 0.85) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
   }
 
   .VPSidebarItem.is-active > .item .link {
-    color: #2563eb !important;
+    color: #fff !important;
     font-weight: 600;
   }
 
