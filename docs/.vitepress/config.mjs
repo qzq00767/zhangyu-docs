@@ -192,8 +192,8 @@ export default defineConfig({
 
   themeConfig: {
     logo: {
-      light: 'https://cloudflarecnimg.scdn.io/i/6a23d1fc3bbe4_1780732412.png',
-      dark: 'https://cloudflarecnimg.scdn.io/i/6a24360b0d4c7_1780758027.png',
+      light: 'https://img.cdn1.vip/i/6a2e44ce5bef4_1781417166.png',
+      dark: 'https://img.cdn1.vip/i/6a2e43bc75ba5_1781416892.png',
     },
     // 顶部导航
     nav: [
