@@ -195,6 +195,7 @@ export default defineConfig({
       light: 'https://img.cdn1.vip/i/6a2e44ce5bef4_1781417166.png',
       dark: 'https://img.cdn1.vip/i/6a2e43bc75ba5_1781416892.png',
     },
+    logoLink: 'https://zhangyuapi.com',
     // 顶部导航
     nav: [
       { text: '首页', link: '/' },
