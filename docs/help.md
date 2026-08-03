@@ -2,84 +2,85 @@
 
 ## 常见问题
 
-### Q: 如何获取 API Key？
+### 如何创建 API Key？
 
-登录 [章鱼中枢控制台](https://zhangyuapi.com)，进入 **API Keys** 页面创建新的 API Key。
+登录控制台后打开 [API 密钥](https://zhangyuapi.com/keys)，点击“新建”并复制生成的 Key。建议为不同应用和环境创建独立 Key。
 
-### Q: 支持哪些模型？
+### 应该使用哪个 API 地址？
 
-我们支持 OpenAI、Claude、Gemini、DeepSeek、Qwen、Llama 等多种模型。完整的模型列表请查看控制台 **模型广场**，或通过 [列出模型 API](/api/models) 获取。
+OpenAI 兼容 SDK 通常使用 `https://api.zhangyuapi.com/v1`；Anthropic 和 Gemini 客户端通常使用 `https://api.zhangyuapi.com`。详见 [API 地址与密钥](/guide/base-url)。
 
-### Q: 如何使用流式返回？
+### 支持哪些模型？
 
-在请求中添加 `"stream": true` 参数即可启用 SSE 流式返回。详见 [Chat（流式返回）](/api/chat)。
+模型会动态调整。请查看 [模型广场](https://zhangyuapi.com/pricing)，或使用当前 API Key 调用 [Models API](/api/models)。模型 ID 必须与返回值完全一致。
 
-### Q: Base URL 在哪里找？
+### 如何查看余额、费用和请求记录？
 
-登录控制台后，在首页或 API Keys 页面可以看到您的专属 Base URL。详情请查看 [获取 Base URL 和 API Key](/guide/base-url)。
+- [钱包](https://zhangyuapi.com/wallet)：查看余额和充值记录；
+- [使用日志](https://zhangyuapi.com/usage-logs/common)：查看请求、模型、Token、费用和错误；
+- [控制台](https://zhangyuapi.com/dashboard)：查看平台当前提供的汇总信息。
 
-### Q: 如何计算费用？
+当前不提供文档旧版本中所写的 `/v1/account/token-balance` 和 `/v1/account/user-balance` 接口。
 
-我们采用按量计费模式，根据实际消耗的 token 数量计费。不同模型的价格不同，请参考控制台 **模型广场** 中的定价信息。
+### API Key 泄露了怎么办？
 
-### Q: 支持批量请求吗？
+立即在 [API 密钥](https://zhangyuapi.com/keys) 页面禁用或删除旧 Key，创建新 Key，并检查使用日志中是否有异常调用。只修改代码而不禁用旧 Key 无法阻止继续盗用。
 
-支持。您可以通过 Batch API 提交批量请求，享受更低的成本。
+### 文件、Batch 或 GPTs 接口可以使用吗？
 
-### Q: API Key 泄露了怎么办？
+不要默认这些扩展接口可用。当前文档仅保证列出的公开端点；如果接口未在导航中提供，请以控制台公告和实测结果为准。
 
-请立即登录控制台，在 API Keys 管理页面删除泄露的 Key，并创建新的 Key。
+### 平台如何处理请求数据？
 
-### Q: 数据安全吗？
+为完成模型调用，请求内容需要转发给上游模型服务商。具体日志、共享、保存与跨境处理规则请查看 [隐私政策](/legal/privacy-policy)。请勿提交您无权处理的敏感信息。
 
-我们不会使用您的数据训练模型，也不会与第三方分享您的数据。所有传输均通过 HTTPS 加密。
+### 是否向中国大陆地区用户提供服务？
 
-### Q: 技术支持联系方式？
+不提供。中国大陆地区用户请勿注册、登录、充值或调用接口，具体范围以 [用户协议](/legal/user-agreement) 为准。
 
-- **Discord 社区**：[https://discord.gg/wNJGVjBZaH](https://discord.gg/wNJGVjBZaH)
-- **在线客服**：登录控制台后右下角客服图标
+## 常见状态码
 
-## 错误码参考
+| 状态码 | 常见原因 | 处理建议 |
+|:------:|---------|---------|
+| `400` | 参数错误或模型不支持某个字段 | 检查请求体和模型能力 |
+| `401` | Key 缺失、无效或已禁用 | 检查 `Authorization: Bearer ...` |
+| `402` | 余额或 Key 额度不足 | 查看钱包和 Key 限额 |
+| `403` | 无权使用模型、分组或功能 | 检查模型权限与账号状态 |
+| `404` | 端点错误、重复 `/v1` 或模型不存在 | 检查完整 URL 和模型 ID |
+| `408` | 请求超时 | 缩短输入或调整超时设置 |
+| `429` | 达到速率、并发或配额限制 | 按 `Retry-After` 退避重试 |
+| `500`、`502`、`503` | 平台或上游暂时异常 | 有限重试并保留请求 ID |
+| `504`、`524` | 上游处理超时 | 谨慎重试，避免重复调用和扣费 |
 
-| HTTP 状态码 | 错误类型 | 说明 |
-|:----------:|---------|------|
-| 200 | - | 请求成功 |
-| 400 | `invalid_request_error` | 请求参数错误 |
-| 401 | `authentication_error` | API Key 无效或已过期 |
-| 402 | `insufficient_quota` | 余额不足 |
-| 403 | `permission_error` | 无权限访问该模型 |
-| 404 | `not_found_error` | 资源不存在（模型、端点） |
-| 429 | `rate_limit_error` | 请求频率超限 |
-| 500 | `server_error` | 服务端错误 |
-| 503 | `service_unavailable` | 服务暂时不可用 |
-
-### 错误响应格式
+错误响应格式可能因协议和上游服务而不同，常见结构如下：
 
 ```json
 {
   "error": {
-    "message": "Insufficient balance. Please recharge.",
-    "type": "insufficient_quota",
-    "code": "insufficient_quota"
+    "message": "错误说明",
+    "type": "error_type",
+    "code": "error_code"
   }
 }
 ```
 
+## 排查顺序
+
+1. 确认请求发往 `api.zhangyuapi.com`，并检查 `/v1` 是否重复或缺失。
+2. 调用 `/v1/models`，确认 Key 可用且模型 ID 存在。
+3. 检查钱包余额、Key 额度、有效期和模型分组权限。
+4. 使用最小请求体重试，暂时移除工具、多模态和结构化参数。
+5. 在使用日志中查找对应请求，保存状态码、请求 ID 和错误信息。
+6. 仍无法解决时，携带脱敏信息联系平台客服。
+
 ## 速率限制
 
-为防止滥用，我们对 API 调用进行了速率限制：**同一 IP 每分钟最多 100 次请求**。
+速率和并发限制可能随账号、API Key、分组、模型及上游状态变化，平台没有统一的“每个 IP 每分钟固定次数”承诺。收到 `429` 时，请降低并发并使用指数退避。
 
-超出限制时会返回 `429 Too Many Requests`。建议实现指数退避重试逻辑。
+## 联系支持
 
-```python
-import time
+- **在线客服：**登录控制台后使用页面中的客服入口；
+- **平台公告：**在控制台首页查看模型、线路、计费和维护通知；
+- **提交信息：**请提供时间、端点、模型 ID、HTTP 状态码、请求 ID 和脱敏后的错误内容。
 
-def api_call_with_retry(max_retries=3):
-    for attempt in range(max_retries):
-        response = make_api_call()
-        if response.status_code == 429:
-            wait_time = 2 ** attempt  # 指数退避
-            time.sleep(wait_time)
-            continue
-        return response
-```
+请勿向客服发送完整 API Key、密码或包含敏感信息的请求正文。

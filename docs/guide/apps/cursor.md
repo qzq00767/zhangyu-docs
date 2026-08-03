@@ -1,46 +1,23 @@
 # Cursor
 
-AI 驱动的代码编辑器，通过章鱼中枢 API 获得增强能力。
+部分 Cursor 版本允许为自定义模型设置 OpenAI Base URL。该配置是否影响 Chat、Agent 或补全功能，取决于 Cursor 当前版本和订阅方案。
 
 ## 配置
 
-1. 打开 Cursor → **Settings** → **Models**
-2. 取消勾选 **OpenAI API Key** 默认选项
-3. 填入以下信息：
+1. 打开 **Settings → Models**。
+2. 找到自定义 OpenAI API Key / Base URL 设置。
+3. 填写：
 
 | 设置项 | 值 |
 |--------|-----|
-| **OpenAI Base URL** | `https://zhangyuapi.com/v1` |
-| **OpenAI API Key** | 你的章鱼中枢 API Key |
-| **Anthropic Base URL** | `https://zhangyuapi.com` |
-| **Anthropic API Key** | 同上（你的章鱼中枢 API Key） |
+| OpenAI Base URL | `https://api.zhangyuapi.com/v1` |
+| OpenAI API Key | 在平台创建的独立 Key |
+| Model ID | 从模型广场复制的模型 ID |
 
-## 启用模型
+如果设置页没有自定义 Base URL，说明当前版本或功能不支持这种接入方式。
 
-在 Model 列表中找到并启用需要的模型：
-
-- `gpt-4o`、`gpt-4o-mini`
-- `claude-sonnet-4-6`、`claude-opus-4-8`
-- `gemini-2.5-flash`
-- `deepseek-v3`、`deepseek-r1`
-
-## 使用
-
-配置完成后，可以使用 Cursor 的全部 AI 功能：
-- **Tab** 代码补全
-- **Ctrl+K** 编辑选区
-- **Ctrl+L** 对话面板
-- **Ctrl+I** Composer 全项目编辑
-
-## 模型推荐
-
-| 场景 | 推荐模型 |
-|------|---------|
-| 日常编码 | `gpt-4o` |
-| 复杂重构 | `claude-sonnet-4-6` |
-| 快速修复 | `gpt-4o-mini` |
-| 深度推理 | `claude-opus-4-8` |
-
-::: tip 提示
-Cursor 需要付费订阅才能使用 AI 功能。API Key 的消耗会独立计入章鱼中枢账户。
+::: warning 功能边界
+自定义 Key 不一定替代 Cursor 内置模型，也不保证 Tab 补全、Agent、Composer 等所有功能都走自定义接口。请通过平台使用日志确认实际请求。
 :::
+
+建议先创建一个低额度 Key，用最小任务测试文本生成、流式输出和工具调用，再逐步用于真实项目。

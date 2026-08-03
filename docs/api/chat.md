@@ -1,117 +1,145 @@
-# <span class="api-method post">POST</span> Chat（流式返回）
+# <span class="api-method post">POST</span> ChatCompletions格式
 
-创建聊天补全（流式返回），支持 Server-Sent Events (SSE)。
+根据对话历史创建模型响应。支持流式和非流式响应。
 
-## 接口地址
+兼容 OpenAI Chat Completions API。
 
-```bash
-POST https://zhangyuapi.com/v1/chat/completions
-```
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/chat/completions</code>
+</div>
 
-## 请求参数
+## 鉴权
 
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `model` | string | ✅ | 模型名称，如 `gpt-4o`、`claude-sonnet-4-6` |
-| `messages` | array | ✅ | 消息列表，按对话顺序排列 |
-| `stream` | boolean | - | 是否流式返回，流式请求设置为 `true` |
-| `temperature` | number | - | 采样温度，范围 0-2 |
-| `max_tokens` | integer | - | 最大输出 token 数 |
-| `top_p` | number | - | 核采样参数，范围 0-1 |
-| `frequency_penalty` | number | - | 频率惩罚，范围 -2.0 到 2.0 |
-| `presence_penalty` | number | - | 存在惩罚，范围 -2.0 到 2.0 |
-| `stop` | string/array | - | 停止词 |
-| `user` | string | - | 终端用户标识 |
+`Authorization: Bearer YOUR_API_KEY`
 
-### 消息对象 (Message)
+使用 Bearer Token 认证。
 
-| 参数名 | 类型 | 必填 | 说明 |
-|--------|------|:----:|------|
-| `role` | string | ✅ | 角色：`system`、`user`、`assistant`、`tool` |
-| `content` | string/array | ✅ | 消息内容，支持文本或多模态内容 |
-| `name` | string | - | 发送者名称 |
-| `tool_calls` | array | - | 工具调用（assistant 角色） |
-| `tool_call_id` | string | - | 工具调用 ID（tool 角色） |
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | 模型 ID |
+| `messages` | array&lt;object&gt; | 是 | 对话消息列表 |
+| `temperature` | number | 否 | 采样温度&lt;br&gt;默认值：`1`&lt;br&gt;范围：`0 &lt;= value &lt;= 2` |
+| `top_p` | number | 否 | 核采样参数&lt;br&gt;默认值：`1`&lt;br&gt;范围：`0 &lt;= value &lt;= 1` |
+| `n` | integer | 否 | 生成数量&lt;br&gt;默认值：`1`&lt;br&gt;范围：`1 &lt;= value` |
+| `stream` | boolean | 否 | 是否流式响应&lt;br&gt;默认值：`false` |
+| `stream_options` | object | 否 | - |
+| `stop` | string\|array&lt;string&gt; | 否 | 停止序列 |
+| `max_tokens` | integer | 否 | 最大生成 Token 数 |
+| `max_completion_tokens` | integer | 否 | 最大补全 Token 数 |
+| `presence_penalty` | number | 否 | 默认值：`0`&lt;br&gt;范围：`-2 &lt;= value &lt;= 2` |
+| `frequency_penalty` | number | 否 | 默认值：`0`&lt;br&gt;范围：`-2 &lt;= value &lt;= 2` |
+| `logit_bias` | object | 否 | - |
+| `user` | string | 否 | - |
+| `tools` | array&lt;object&gt; | 否 | - |
+| `tool_choice` | string\|object | 否 | - |
+| `response_format` | object | 否 | - |
+| `seed` | integer | 否 | - |
+| `reasoning_effort` | string | 否 | 推理强度 (用于支持推理的模型)&lt;br&gt;可选值：`"low" \| "medium" \| "high"` |
+| `modalities` | array&lt;string&gt; | 否 | - |
+| `audio` | object | 否 | - |
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://zhangyuapi.com/v1/chat/completions" \
-  -H "Authorization: Bearer {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o",
-    "messages": [
-      {"role": "system", "content": "你是一个有用的编程助手。"},
-      {"role": "user", "content": "用 Python 写一个快速排序算法。"}
-    ],
-    "stream": true,
-    "temperature": 0.7,
-    "max_tokens": 4096
-  }'
-```
-
-## 流式响应格式
-
-每个 SSE 事件包含一个 JSON 块：
-
-```json
-data: {
-  "id": "chatcmpl-xxx",
-  "object": "chat.completion.chunk",
-  "created": 1700000000,
-  "model": "gpt-4o",
-  "choices": [
+  "model": "gpt-4",
+  "messages": [
     {
-      "index": 0,
-      "delta": {
-        "role": "assistant",
-        "content": "快速"
-      },
-      "finish_reason": null
+      "role": "system",
+      "content": "string"
     }
-  ],
-  "usage": null
-}
+  ]
+}'
 ```
 
-最后一个块包含完整的使用量信息：
+## 响应体
+
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `application/json` |
+| `400` | `application/json` |
+| `429` | `application/json` |
+
+### 200 响应示例
 
 ```json
-data: {
-  "id": "chatcmpl-xxx",
-  "object": "chat.completion.chunk",
-  "created": 1700000000,
-  "model": "gpt-4o",
+{
+  "id": "string",
+  "object": "chat.completion",
+  "created": 0,
+  "model": "string",
   "choices": [
     {
       "index": 0,
-      "delta": {},
+      "message": {
+        "role": "system",
+        "content": "string",
+        "name": "string",
+        "tool_calls": [
+          {
+            "id": "string",
+            "type": "function",
+            "function": {
+              "name": "string",
+              "arguments": "string"
+            }
+          }
+        ],
+        "tool_call_id": "string",
+        "reasoning_content": "string"
+      },
       "finish_reason": "stop"
     }
   ],
   "usage": {
-    "prompt_tokens": 35,
-    "completion_tokens": 256,
-    "total_tokens": 291
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  },
+  "system_fingerprint": "string"
+}
+```
+
+### 400 响应示例
+
+```json
+{
+  "error": {
+    "message": "string",
+    "type": "string",
+    "param": "string",
+    "code": "string"
   }
 }
 ```
 
-## 响应字段说明
+### 429 响应示例
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | string | 唯一请求 ID |
-| `object` | string | 对象类型：`chat.completion.chunk` |
-| `created` | integer | 创建时间戳（Unix 秒） |
-| `model` | string | 实际使用的模型 |
-| `choices[].index` | integer | 选择索引 |
-| `choices[].delta.role` | string | 角色（仅首个块包含） |
-| `choices[].delta.content` | string | 增量内容 |
-| `choices[].finish_reason` | string | 结束原因：`stop`、`length`、`tool_calls` 等 |
-| `usage` | object | Token 使用量（仅最后一块包含） |
-
-## 流式结束标记
-
-流式传输以 `data: [DONE]` 标记结束。
+```json
+{
+  "error": {
+    "message": "string",
+    "type": "string",
+    "param": "string",
+    "code": "string"
+  }
+}
+```

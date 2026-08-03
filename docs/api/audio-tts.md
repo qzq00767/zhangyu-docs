@@ -1,34 +1,51 @@
-# <span class="api-method post">POST</span> 文字转语音（TTS）
+# <span class="api-method post">POST</span> 文本转语音
 
-将文字转换为语音。
+将文本转换为音频
 
-## 接口地址
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/audio/speech</code>
+</div>
 
-```bash
-POST https://zhangyuapi.com/v1/audio/speech
-```
+## 鉴权
+
+`Authorization: Bearer YOUR_API_KEY`
+
+使用 Bearer Token 认证。
+
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | - |
+| `input` | string | 是 | 要转换的文本&lt;br&gt;长度：`length &lt;= 4096` |
+| `voice` | string | 是 | 可选值：`"alloy" \| "echo" \| "fable" \| "onyx" \| "nova" \| "shimmer"` |
+| `response_format` | string | 否 | 默认值：`"mp3"`&lt;br&gt;可选值：`"mp3" \| "opus" \| "aac" \| "flac" \| "wav" \| "pcm"` |
+| `speed` | number | 否 | 默认值：`1`&lt;br&gt;范围：`0.25 &lt;= value &lt;= 4` |
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://zhangyuapi.com/v1/audio/speech" \
-  -H "Authorization: Bearer {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1/audio/speech" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "tts-1",
-    "input": "你好，欢迎使用章鱼中枢。",
-    "voice": "alloy",
-    "speed": 1.0
-  }' \
-  --output speech.mp3
+    "input": "string",
+    "voice": "alloy"
+  }'
 ```
 
-## 参数说明
+## 响应体
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | `tts-1`（更快）或 `tts-1-hd`（更高质量） |
-| `input` | string | ✅ | 要转换的文字（最大 4096 字符） |
-| `voice` | string | ✅ | 语音名称 |
-| `speed` | number | - | 语速，0.25-4.0，默认 1.0 |
-| `response_format` | string | - | 输出格式：`mp3`、`opus`、`aac`、`flac`、`wav`、`pcm` |
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `audio/mpeg` |
+
+### 200 响应示例
+
+```text
+"string"
+```

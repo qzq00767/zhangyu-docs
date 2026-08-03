@@ -1,71 +1,33 @@
-# Dify
+# Dify、n8n 与工作流工具
 
-开源 LLM 应用开发平台，可视化编排 AI 工作流。
+## Dify
 
-## 安装
-
-Dify 支持 Docker 部署和云服务。详见 [Dify 官方文档](https://docs.dify.ai/)。
-
-## 配置模型供应商
-
-1. 打开 Dify → **设置** → **模型供应商**
-2. 添加 **OpenAI 兼容** 供应商
-3. 填入：
+1. 打开 **设置 → 模型供应商**。
+2. 添加 OpenAI Compatible 类型的供应商。
+3. 填写：
 
 | 设置项 | 值 |
 |--------|-----|
-| **API Base URL** | `https://zhangyuapi.com/v1` |
-| **API Key** | 你的章鱼中枢 API Key |
+| API Base URL | `https://api.zhangyuapi.com/v1` |
+| API Key | 在平台创建的独立 Key |
+| Model ID | 从模型广场复制的模型 ID |
 
-## 添加模型
+对话模型和嵌入模型需要分别添加，并确认对应模型支持所需端点。Dify 知识库文件由 Dify 自己存储，与平台的 Files API 支持情况无关。
 
-在模型供应商页面添加需要的模型：
+## n8n
 
-**对话模型**：
-- `gpt-4o` — 复杂推理
-- `gpt-4o-mini` — 轻量任务
-- `claude-sonnet-4-6` — 代码生成
+使用 OpenAI 节点时，可在凭证或节点设置中配置自定义 Base URL。若当前节点不支持自定义地址，请改用 HTTP Request 节点：
 
-**嵌入模型**：
-- `text-embedding-3-small` — 知识库向量化
-
-## 使用场景
-
-- **聊天助手**：拖拽搭建 AI 客服、问答机器人
-- **知识库**：上传文档构建 RAG 应用
-- **工作流**：可视化编排多步骤 AI 流水线
-- **Agent**：为 LLM 配备工具（搜索、代码执行等）
-
-## 环境变量配置
-
-如果自部署 Dify，可在 `.env` 中预设：
-
-```bash
-OPENAI_API_BASE=https://zhangyuapi.com/v1
-OPENAI_API_KEY={{API_KEY}}
+```http
+POST https://api.zhangyuapi.com/v1/chat/completions
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
 ```
 
----
+## 其他工作流平台
 
-# N8N
+任何支持自定义 HTTP 请求的平台都可以按对应 API 文档调用。请把 Key 存放在平台的凭证管理或 Secret 中，不要直接写进可公开查看的工作流定义。
 
-开源工作流自动化平台。
-
-## 配置
-
-在 N8N 中添加 OpenAI 节点时，填入自定义 Base URL 和 API Key 即可使用章鱼中枢模型。
-
----
-
-# Coze（扣子）
-
-字节跳动 AI Bot 开发平台。
-
-## 配置
-
-在 Coze 工作流中使用 **HTTP 请求** 节点，调用章鱼中枢 API：
-
-```bash
-POST https://zhangyuapi.com/v1/chat/completions
-Authorization: Bearer {{API_KEY}}
-```
+::: tip 上线前验证
+分别验证超时、重试、并发、错误分支和费用上限。工作流平台的自动重试可能产生重复请求和重复扣费。
+:::

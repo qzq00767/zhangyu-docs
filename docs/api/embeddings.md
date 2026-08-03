@@ -1,38 +1,47 @@
-# RAG — 嵌入（Embeddings）
+# <span class="api-method post">POST</span> 原生OpenAI格式
 
-将文本转换为向量表示，用于语义搜索、聚类等任务。
+将文本转换为向量嵌入
 
-## <span class="api-method post">POST</span> 创建嵌入
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/embeddings</code>
+</div>
 
-### 接口地址
+## 鉴权
+
+`Authorization: Bearer YOUR_API_KEY`
+
+使用 Bearer Token 认证。
+
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | - |
+| `input` | string\|array&lt;string&gt; | 是 | 要嵌入的文本 |
+| `encoding_format` | string | 否 | 默认值：`"float"`&lt;br&gt;可选值：`"float" \| "base64"` |
+| `dimensions` | integer | 否 | 输出向量维度 |
+
+## 请求示例
 
 ```bash
-POST https://zhangyuapi.com/v1/embeddings
-```
-
-### 请求示例
-
-```bash
-curl -X POST "https://zhangyuapi.com/v1/embeddings" \
-  -H "Authorization: Bearer {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1/embeddings" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "text-embedding-3-small",
-    "input": "章鱼中枢是一个 AI 模型 API 聚合平台。",
-    "encoding_format": "float"
+    "model": "text-embedding-ada-002",
+    "input": "string"
   }'
 ```
 
-### 参数说明
+## 响应体
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | 嵌入模型名称 |
-| `input` | string/array | ✅ | 输入文本（支持批量） |
-| `encoding_format` | string | - | `float`（默认）或 `base64` |
-| `dimensions` | integer | - | 输出向量维度（部分模型支持） |
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `application/json` |
 
-### 响应示例
+### 200 响应示例
 
 ```json
 {
@@ -41,31 +50,15 @@ curl -X POST "https://zhangyuapi.com/v1/embeddings" \
     {
       "object": "embedding",
       "index": 0,
-      "embedding": [0.01, -0.02, 0.03, ...]
+      "embedding": [
+        0
+      ]
     }
   ],
-  "model": "text-embedding-3-small",
+  "model": "string",
   "usage": {
-    "prompt_tokens": 12,
-    "total_tokens": 12
+    "prompt_tokens": 0,
+    "total_tokens": 0
   }
 }
 ```
-
-### 支持的嵌入模型
-
-| 模型 | 维度 | 说明 |
-|------|:----:|------|
-| `text-embedding-3-small` | 1536 | 高性价比、快速 |
-| `text-embedding-3-large` | 3072 | 更高质量 |
-| `text-embedding-ada-002` | 1536 | 经典模型 |
-
-## 嵌入对象
-
-### 对象结构
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `object` | string | 固定为 `embedding` |
-| `index` | integer | 输入中的索引位置 |
-| `embedding` | array | 向量浮点数数组 |

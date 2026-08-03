@@ -1,63 +1,29 @@
 # LobeChat
 
-现代化 AI 对话框架，支持插件市场、知识库和自定义 Agent。
+LobeChat 支持配置自定义 OpenAI 兼容服务。不同部署版本的字段名称可能不同。
 
 ## 配置
 
-1. 打开 LobeChat → **设置** → **语言模型**
-2. 选择 **OpenAI** 提供商
-3. 填入配置：
+1. 打开语言模型或模型服务设置。
+2. 选择 OpenAI 提供商或自定义 OpenAI Compatible 提供商。
+3. 填写：
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 代理地址** | `https://zhangyuapi.com/v1` |
-| **API Key** | 你的章鱼中枢 API Key |
+| API 代理地址 / Base URL | `https://api.zhangyuapi.com/v1` |
+| API Key | 在平台创建的独立 Key |
+| 自定义模型 | 从模型广场复制的模型 ID |
 
-## 自定义模型
+如果请求地址出现 `/v1/v1/`，说明当前版本会自动添加 `/v1`，请把 Base URL 改为 `https://api.zhangyuapi.com`。
 
-LobeChat 支持添加自定义模型列表：
-1. 在语言模型设置中打开 **自定义模型**
-2. 添加模型 ID，如 `gpt-4o`、`claude-sonnet-4-6`
+## 功能验证
 
-## 功能亮点
+- 普通对话和流式输出；
+- 图片输入或图片生成；
+- 工具调用和插件；
+- 知识库所需的嵌入模型；
+- 使用日志中的模型、费用和错误。
 
-- 插件市场：联网搜索、图片生成、代码执行
-- 知识库：上传文档构建专属知识库
-- Agent 角色：预设角色和自定义 Prompt
+LobeChat 的知识库、插件和 Agent 功能还会依赖其自身存储与部署配置，并非只填写 API Key 即可全部启用。
 
----
-
-# NextChat
-
-轻量级 ChatGPT Web 客户端，一键部署。
-
-## 配置
-
-1. 打开 NextChat → **设置**
-2. 勾选 **自定义接口**
-3. 填入：
-
-| 设置项 | 值 |
-|--------|-----|
-| **接口地址** | `https://zhangyuapi.com` |
-| **API Key** | 你的章鱼中枢 API Key |
-
-## Docker 部署
-
-```bash
-docker run -d -p 3000:3000 \
-  -e BASE_URL=https://zhangyuapi.com \
-  -e OPENAI_API_KEY={{API_KEY}} \
-  yidadaa/chatgpt-next-web
-```
-
-## Vercel 部署
-
-Fork 项目后，在 Vercel 环境变量中设置：
-- `BASE_URL` = `https://zhangyuapi.com`
-- `OPENAI_API_KEY` = 你的 API Key
-
-::: tip 提示
-- LobeChat 功能丰富但配置较复杂，适合进阶用户
-- NextChat 极简轻量，适合快速部署和日常使用
-:::
+NextChat 请查看 [独立配置页面](/guide/apps/nextchat)。

@@ -1,73 +1,91 @@
-# <span class="api-method post">POST</span> 创建模型响应
+# <span class="api-method post">POST</span> Responses格式
 
-使用 Responses API 创建模型响应，是新一代的交互方式。
+OpenAI Responses API，用于创建模型响应。 支持多轮对话、工具调用、推理等功能。
 
-## 接口地址
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/responses</code>
+</div>
 
-```bash
-POST https://zhangyuapi.com/v1/responses
-```
+## 鉴权
 
-## Responses API vs Chat API
+`Authorization: Bearer YOUR_API_KEY`
 
-| 特性 | Responses API | Chat API |
-|------|:------------:|:--------:|
-| 内置工具（联网搜索、文件搜索） | ✅ | ❌ |
-| 多轮对话 | ✅ | ✅ |
-| 流式返回 | ✅ | ✅ |
-| 结构化输出 | ✅ | ✅ |
-| 多模态输入 | ✅ | ✅ |
+使用 Bearer Token 认证。
+
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | - |
+| `input` | string\|array&lt;object&gt; | 否 | 输入内容，可以是字符串或消息数组 |
+| `instructions` | string | 否 | - |
+| `max_output_tokens` | integer | 否 | - |
+| `temperature` | number | 否 | - |
+| `top_p` | number | 否 | - |
+| `stream` | boolean | 否 | - |
+| `tools` | array&lt;object&gt; | 否 | - |
+| `tool_choice` | string\|object | 否 | - |
+| `reasoning` | object | 否 | - |
+| `previous_response_id` | string | 否 | - |
+| `truncation` | string | 否 | 可选值：`"auto" \| "disabled"` |
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://zhangyuapi.com/v1/responses" \
-  -H "Authorization: Bearer {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1/responses" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o",
-    "input": "解释什么是机器学习。",
-    "instructions": "你是一个 AI 教育专家。",
-    "temperature": 0.7,
-    "max_output_tokens": 1024
+    "model": "string"
   }'
 ```
 
-## 参数说明
+## 响应体
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | 模型名称 |
-| `input` | string/array | ✅ | 用户输入 |
-| `instructions` | string | - | 系统指令 |
-| `temperature` | number | - | 采样温度 |
-| `max_output_tokens` | integer | - | 最大输出 token |
-| `tools` | array | - | 工具列表 |
-| `tool_choice` | string | - | 工具选择策略 |
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `application/json` |
 
-## 响应示例
+### 200 响应示例
 
 ```json
 {
-  "id": "resp_xxx",
+  "id": "string",
   "object": "response",
-  "model": "gpt-4o",
+  "created_at": 0,
+  "status": "completed",
+  "model": "string",
   "output": [
     {
-      "type": "message",
-      "role": "assistant",
+      "type": "string",
+      "id": "string",
+      "status": "string",
+      "role": "string",
       "content": [
         {
-          "type": "output_text",
-          "text": "机器学习是人工智能的一个子领域..."
+          "type": "string",
+          "text": "string"
         }
       ]
     }
   ],
   "usage": {
-    "input_tokens": 20,
-    "output_tokens": 256,
-    "total_tokens": 276
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 0
+    }
   }
 }
 ```

@@ -1,68 +1,39 @@
-# 绘图模型
+# <span class="api-method post">POST</span> 生成图像
 
-通过 API 生成和编辑图片。
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/images/generations/</code>
+</div>
 
-## <span class="api-method post">POST</span> 生成图片
+## 鉴权
 
-### 接口地址
+`Authorization: Bearer YOUR_API_KEY`
 
-```bash
-POST https://zhangyuapi.com/v1/images/generations
-```
+使用 Bearer Token 认证。
 
-### 请求示例
+## 请求体
 
-```bash
-curl -X POST "https://zhangyuapi.com/v1/images/generations" \
-  -H "Authorization: Bearer {{API_KEY}}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "dall-e-3",
-    "prompt": "一只柴犬在阳光下的草地上奔跑",
-    "n": 1,
-    "size": "1024x1024",
-    "quality": "standard",
-    "style": "vivid"
-  }'
-```
-
-### 参数说明
+内容类型：`application/json`
 
 | 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | 模型名称 |
-| `prompt` | string | ✅ | 图片描述文本 |
-| `n` | integer | - | 生成数量（1-10） |
-| `size` | string | - | 图片尺寸 |
-| `quality` | string | - | `standard` 或 `hd` |
-| `style` | string | - | `vivid`（生动）或 `natural`（自然） |
-| `response_format` | string | - | `url` 或 `b64_json` |
+|---|---|:---:|---|
+| `model` | string | 否 | 用于图像生成的模型。`dall-e-2`、`dall-e-3` 或 `gpt-image-1` 之一。默认为 `dall-e-2`，除非使用特定于 `gpt-image-1` 的参数。 |
+| `prompt` | string | 是 | 所需图像的文本描述。`gpt-image-1` 的最大长度为 32000 个字符，`dall-e-2` 的最大长度为 1000 个字符，`dall-e-3` 的最大长度为 4000 个字符。 |
+| `n` | integer | 否 | 要生成的图像数量。必须介于 1 到 10 之间。对于 `dall-e-3`，仅支持 `n=1`。 |
+| `size` | string | 否 | 生成的图像的大小。`对于 gpt-image-1`，必须是 `1024x1024`、`1536x1024`（横向）、`1024x1536`（纵向）或`自动`（默认值）之一，`对于 dall-e-2`，必须是 `256x256、``512x512` 或 `1024x1024` 之一，对于 `dall-e-3`，必须是 `1024x1024`、`1792x1024` 或 `1024x1792` 之一。 |
+| `background` | string | 否 | - |
+| `moderation` | string | 否 | 控制 `gpt-image-1` 生成的图像的内容审核级别。必须为`低，` 以进行限制较少的筛选或`自动`（默认值）。 |
+| `quality` | string | 否 | 将生成的图像的质量。 |
+| `stream` | string | 否 | - |
+| `style` | string | 否 | - |
+| `user` | string | 否 | - |
 
-### 响应示例
-
-```json
-{
-  "created": 1700000000,
-  "data": [
-    {
-      "url": "https://...png",
-      "revised_prompt": "一只柴犬在阳光明媚的草地上奔跑..."
-    }
-  ]
-}
-```
-
-## <span class="api-method post">POST</span> 编辑图片
+## 请求示例
 
 ```bash
-POST https://zhangyuapi.com/v1/images/edits
+curl -X POST "https://api.zhangyuapi.com/v1/images/generations/" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "prompt": "string"
+}'
 ```
-
-## 支持的模型
-
-| 模型 | 功能 |
-|------|------|
-| `dall-e-3` | 图片生成 |
-| `dall-e-2` | 图片生成 + 编辑 |
-| `flux` | 图片生成 |
-| `midjourney` | 图片生成 |

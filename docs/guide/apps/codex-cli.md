@@ -1,6 +1,6 @@
 # Codex CLI
 
-OpenAI 开源终端编程助手，可读取、修改并执行代码。
+Codex CLI 支持在用户级 `config.toml` 中定义自定义模型 Provider。章鱼公益平台接入需要使用支持 Responses API 的模型。
 
 ## 安装
 
@@ -8,35 +8,39 @@ OpenAI 开源终端编程助手，可读取、修改并执行代码。
 npm install -g @openai/codex
 ```
 
-## 配置
+## 配置 API Key
 
-### config.toml
+将 Key 放入环境变量，不要直接写进 `config.toml`：
 
-创建 `~/.codex/config.toml`：
+```bash
+export ZHANGYU_API_KEY="YOUR_API_KEY"
+```
+
+Windows PowerShell：
+
+```powershell
+$env:ZHANGYU_API_KEY="YOUR_API_KEY"
+```
+
+## 配置 Provider
+
+编辑用户级 `~/.codex/config.toml`：
 
 ```toml
 model_provider = "zhangyu"
-model = "gpt-4o"
+model = "YOUR_RESPONSES_MODEL_ID"
 model_reasoning_effort = "high"
-network_access = "enabled"
-disable_response_storage = true
 
 [model_providers.zhangyu]
-name = "OpenAI"
-base_url = "https://zhangyuapi.com/v1"
+name = "章鱼公益平台"
+base_url = "https://api.zhangyuapi.com/v1"
+env_key = "ZHANGYU_API_KEY"
 wire_api = "responses"
-requires_openai_auth = true
 ```
 
-### auth.json
-
-创建 `~/.codex/auth.json`：
-
-```json
-{
-  "OPENAI_API_KEY": "{{API_KEY}}"
-}
-```
+::: warning 协议要求
+Codex CLI 自定义 Provider 当前使用 Responses API，`wire_api` 仅支持 `responses`。不要在这里填写只支持 Chat Completions 或 Anthropic Messages 的模型。
+:::
 
 ## 使用
 
@@ -45,24 +49,10 @@ requires_openai_auth = true
 codex
 
 # 指定工作目录
-codex /path/to/project
+codex -C /path/to/project
 
-# 单次命令
-codex exec "修复所有 TypeScript 类型错误"
+# 非交互执行
+codex exec "检查项目并修复 TypeScript 类型错误"
 ```
 
-## 模型选择
-
-```toml
-# 推荐配置
-model = "gpt-4o"              # 日常编程
-# model = "claude-sonnet-4-6" # 复杂重构（需切换 wire_api）
-# model = "o4-mini"           # 高推理强度
-model_reasoning_effort = "high"
-```
-
-::: tip 提示
-- Codex CLI 支持 OpenAI Responses API 和 Chat API 两种模式
-- `wire_api = "responses"` 使用新版 Responses API（推荐）
-- `wire_api = "chat"` 使用传统 Chat API
-:::
+如果出现 `404` 或响应解析失败，请先用同一个模型测试 `/v1/responses`，并确认模型支持 Responses API。配置项以 [Codex 官方配置参考](https://developers.openai.com/codex/config-reference/) 为准。

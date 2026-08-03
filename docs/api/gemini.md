@@ -1,58 +1,46 @@
-# Gemini 官方格式
+# <span class="api-method post">POST</span> Gemini文本聊天
 
-使用 Google Gemini 官方 API 格式进行请求。
+代理 Gemini API 请求。 路径格式: `/v1beta/models/{model_name}:{action}`
 
-## 接口地址
+例如:
 
-```bash
-POST https://zhangyuapi.com/v1beta/models/{model}:generateContent
-```
+*   `/v1beta/models/gemini-2.5-pro:generateContent`
+*   `/v1beta/models/gemini-2.5-pro:streamGenerateContent?alt=sse`
+
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1beta/models/{model}:generateContent</code>
+</div>
+
+## 鉴权
+
+`Authorization: Bearer YOUR_API_KEY`
+
+使用 Bearer Token 认证。
+
+## 路径参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | 模型名称 |
+
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `contents` | - | 否 | - |
+| `generationConfig` | - | 否 | - |
+| `safetySettings` | - | 否 | - |
+| `tools` | - | 否 | - |
+| `systemInstruction` | - | 否 | - |
 
 ## 请求示例
 
 ```bash
-curl -X POST "https://zhangyuapi.com/v1beta/models/gemini-2.5-flash:generateContent" \
-  -H "x-goog-api-key: {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1beta/models/string:generateContent" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": "解释人工智能的发展历史。"
-          }
-        ]
-      }
-    ],
-    "generationConfig": {
-      "temperature": 0.7,
-      "maxOutputTokens": 1024
-    }
-  }'
+  -d '{}'
 ```
-
-## 参数说明
-
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `contents` | array | ✅ | 对话内容 |
-| `contents[].parts[].text` | string | ✅ | 文本内容 |
-| `generationConfig.temperature` | number | - | 采样温度 |
-| `generationConfig.maxOutputTokens` | integer | - | 最大输出 token |
-| `generationConfig.topP` | number | - | 核采样参数 |
-| `generationConfig.topK` | integer | - | Top-K 采样 |
-
-## 流式返回
-
-添加 `alt=sse` 查询参数启用流式返回：
-
-```bash
-POST https://zhangyuapi.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse
-```
-
-## 鉴权
-
-支持两种鉴权方式：
-
-- `x-goog-api-key: {{API_KEY}}`
-- `Authorization: Bearer {{API_KEY}}`

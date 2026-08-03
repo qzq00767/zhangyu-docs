@@ -1,139 +1,47 @@
 # AI 应用集成
 
-将章鱼中枢 API 接入各类 AI 工具和应用。
+本节说明如何把章鱼公益平台接入常见 SDK、命令行工具、IDE 和桌面客户端。
 
-::: tip 通用规则
-几乎所有支持 OpenAI API 的应用，只需：
-- 将 API 地址替换为 `https://zhangyuapi.com/v1`
-- 将 API Key 替换为你的章鱼中枢 Key
+::: warning 先确认三个配置项
+- OpenAI 兼容 Base URL：`https://api.zhangyuapi.com/v1`
+- Anthropic / Gemini 协议根地址：`https://api.zhangyuapi.com`
+- 模型 ID：从 [模型广场](https://zhangyuapi.com/pricing) 或 `/v1/models` 获取
 :::
+
+第三方应用的字段名称和路径拼接方式可能随版本变化。如果出现 `404`，请检查应用是否重复添加了 `/v1`。如果应用无法自定义 Base URL，则不能直接接入。
 
 ## 命令行工具
 
-<div class="feature-grid">
+| 工具 | 接入方式 | 文档 |
+|------|---------|------|
+| Claude Code | Anthropic 兼容协议 | [配置 Claude Code](/guide/apps/claude-code) |
+| Codex CLI | Responses API 自定义 Provider | [配置 Codex CLI](/guide/apps/codex-cli) |
+| Gemini CLI | Gemini 原生兼容协议 | [配置 Gemini CLI](/guide/apps/gemini-cli) |
 
-<div class="feature-card">
+## IDE 与编程助手
 
-### [Claude Code](/guide/apps/claude-code)
-终端中的 Claude — 搜索百万行代码库，将流程化为命令
+| 工具 | 接入方式 | 文档 |
+|------|---------|------|
+| Cursor | 自定义 OpenAI Base URL，支持情况取决于版本 | [配置 Cursor](/guide/apps/cursor) |
+| Cline | OpenAI Compatible Provider | [配置 Cline / Aider](/guide/apps/cline) |
 
-</div>
+## 桌面与 Web 客户端
 
-<div class="feature-card">
-
-### [Codex CLI](/guide/apps/codex-cli)
-OpenAI 开源终端编程助手，读写本地代码
-
-</div>
-
-<div class="feature-card">
-
-### [Gemini CLI](/guide/apps/gemini-cli)
-Google 开源 AI 代理，直接接入终端
-
-</div>
-
-</div>
-
-## IDE 集成
-
-<div class="feature-grid">
-
-<div class="feature-card">
-
-### [Cursor](/guide/apps/cursor)
-AI 驱动的代码编辑器，替换 Base URL 即可接入
-
-</div>
-
-<div class="feature-card">
-
-### [Cline / Aider](/guide/apps/cline)
-VS Code 插件 + 终端 AI 结对编程
-
-</div>
-
-</div>
-
-## 桌面客户端
-
-<div class="feature-grid">
-
-<div class="feature-card">
-
-### [Cherry Studio](/guide/apps/cherry-studio)
-全能 AI 桌面客户端，支持生图和多模型切换
-
-</div>
-
-<div class="feature-card">
-
-### [Chatbox](/guide/apps/chatbox)
-简洁易用的 AI 客户端，全平台支持
-
-</div>
-
-</div>
-
-## Web 应用
-
-<div class="feature-grid">
-
-<div class="feature-card">
-
-### [LobeChat](/guide/apps/lobechat)
-现代化 AI 对话框架，支持插件和知识库
-
-</div>
-
-<div class="feature-card">
-
-### [NextChat](/guide/apps/nextchat)
-轻量 ChatGPT Web 客户端，一键部署
-
-</div>
-
-</div>
+| 工具 | 接入方式 | 文档 |
+|------|---------|------|
+| Cherry Studio | 自定义 OpenAI 服务商 | [配置 Cherry Studio](/guide/apps/cherry-studio) |
+| Chatbox | 自定义 OpenAI API | [配置 Chatbox](/guide/apps/chatbox) |
+| LobeChat | 自定义模型服务 | [配置 LobeChat](/guide/apps/lobechat) |
+| NextChat | 自定义接口或部署环境变量 | [配置 NextChat](/guide/apps/nextchat) |
 
 ## 工作流与插件
 
-<div class="feature-grid">
+| 工具 | 接入方式 | 文档 |
+|------|---------|------|
+| ComfyUI | 章鱼公益平台自定义节点 | [配置 ComfyUI 插件](/guide/apps/comfyui) |
+| Dify / n8n | OpenAI Compatible 或 HTTP 节点 | [配置工作流工具](/guide/apps/dify) |
+| 翻译与文献插件 | 自定义完整端点 | [配置浏览器和 Zotero 插件](/guide/apps/plugins) |
 
-<div class="feature-card">
+## 客户端 Key 安全
 
-### [ComfyUI 插件](/guide/apps/comfyui)
-Stable Diffusion 工作流平台，章鱼中枢生图节点
-
-</div>
-
-<div class="feature-card">
-
-### [Dify](/guide/apps/dify)
-LLM 应用开发平台，可视化编排 AI 工作流
-
-</div>
-
-<div class="feature-card">
-
-### [沉浸式翻译 / Zotero](/guide/apps/plugins)
-浏览器翻译 + 文献管理 AI 辅助插件
-
-</div>
-
-</div>
-
-## 快速查阅
-
-| 工具 | 类型 | 配置关键 |
-|------|:----:|------|
-| [Claude Code](/guide/apps/claude-code) | CLI | `ANTHROPIC_BASE_URL` |
-| [Codex CLI](/guide/apps/codex-cli) | CLI | `base_url` in config.toml |
-| [Gemini CLI](/guide/apps/gemini-cli) | CLI | `GEMINI_API_KEY` + `.env` |
-| [Cursor](/guide/apps/cursor) | IDE | Settings → Models |
-| [Cline / Aider](/guide/apps/cline) | 插件 | API Provider 设置 / 环境变量 |
-| [Cherry Studio](/guide/apps/cherry-studio) | 桌面 | 模型服务设置 |
-| [Chatbox](/guide/apps/chatbox) | 桌面 | 模型设置页 |
-| [LobeChat](/guide/apps/lobechat) | Web | 语言模型设置 |
-| [NextChat](/guide/apps/nextchat) | Web | 自定义接口 |
-| [ComfyUI 插件](/guide/apps/comfyui) | 工作流 | 章鱼中枢生图节点 |
-| [沉浸式翻译 / Zotero](/guide/apps/plugins) | 插件 | 翻译服务 / GPT 首选项 |
+桌面应用和浏览器插件通常会把 API Key 保存在本机。请为每个客户端创建单独 Key，设置较低额度和有效期，并定期检查使用日志。不要把管理员或高额度 Key 配置到浏览器扩展中。

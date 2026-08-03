@@ -1,63 +1,24 @@
-# 账户与余额查询
+# 费用、余额与使用量
 
-查询 API Key 或账户的余额和额度信息。
+当前平台未开放面向用户的余额查询 API。请通过控制台查看账户余额、充值记录、调用明细和 API Key 状态。
 
-## <span class="api-method get">GET</span> 查询令牌余额
+## 控制台入口
 
-查询指定 API Key 的剩余额度。
+| 用途 | 地址 |
+|------|------|
+| 账户概览 | [打开控制台](https://zhangyuapi.com/dashboard) |
+| 余额与充值 | [打开钱包](https://zhangyuapi.com/wallet) |
+| API 密钥 | [打开密钥页面](https://zhangyuapi.com/keys) |
+| 调用与扣费明细 | [查看使用日志](https://zhangyuapi.com/usage-logs/common) |
+| 模型价格与倍率 | [查看模型广场](https://zhangyuapi.com/pricing) |
 
-```bash
-curl "https://zhangyuapi.com/v1/account/token-balance" \
-  -H "Authorization: Bearer {{API_KEY}}"
-```
+## 对账建议
 
-### 响应示例
+1. 为不同项目、环境和团队创建独立 API Key。
+2. 在密钥页面设置合理的额度、有效期或访问限制（以控制台实际选项为准）。
+3. 定期查看或导出使用日志，按请求时间、模型、Token 和费用定位差异。
+4. 余额告警只作为提醒，生产系统仍应自行处理额度不足、限流和服务故障。
 
-```json
-{
-  "object": "token_balance",
-  "token": "sk-xxxx...",
-  "balance": 12.50,
-  "currency": "USD",
-  "status": "active",
-  "expires_at": "2026-12-31T23:59:59Z"
-}
-```
-
-### 响应字段
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `balance` | number | 当前余额 |
-| `currency` | string | 货币单位 |
-| `status` | string | 状态：`active`、`disabled`、`expired` |
-| `expires_at` | string | 过期时间 |
-
-## <span class="api-method get">GET</span> 查询用户余额
-
-查询账户总余额。
-
-```bash
-curl "https://zhangyuapi.com/v1/account/user-balance" \
-  -H "Authorization: Bearer {{API_KEY}}"
-```
-
-### 响应示例
-
-```json
-{
-  "object": "user_balance",
-  "balance": 50.00,
-  "currency": "USD",
-  "total_used": 3.25,
-  "total_topup": 53.25
-}
-```
-
-## 使用量查询
-
-在控制台中可查看更详细的使用统计，包括：
-- 每日/每月用量趋势
-- 按模型分组的消耗
-- 按 API Key 分组的消耗
-- 实时调用日志
+::: warning 计费依据
+客户端估算 Token 仅供参考。最终用量、倍率和扣费以平台计量记录、模型广场公示及实际账单为准。
+:::

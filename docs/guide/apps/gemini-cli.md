@@ -1,6 +1,6 @@
 # Gemini CLI
 
-Google 开源 AI 代理，将 Gemini 能力直接带入终端。
+Gemini CLI 可在支持自定义 Gemini API 根地址的版本中接入平台。目标模型必须支持 Gemini 原生协议。
 
 ## 安装
 
@@ -10,67 +10,33 @@ npm install -g @google/gemini-cli
 
 ## 配置
 
-### 环境变量
-
-创建 `~/.gemini/.env`：
+在 `~/.gemini/.env` 中设置：
 
 ```bash
-GOOGLE_GEMINI_BASE_URL=https://zhangyuapi.com
-GEMINI_API_KEY={{API_KEY}}
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_API_KEY=YOUR_API_KEY
+GOOGLE_GEMINI_BASE_URL=https://api.zhangyuapi.com
+GEMINI_MODEL=YOUR_GEMINI_MODEL_ID
 ```
 
-### settings.json
+Base URL 不要添加 `/v1`，客户端会自行拼接 `/v1beta/models/...`。
 
-创建 `~/.gemini/settings.json`：
-
-```json
-{
-  "ide": {
-    "enabled": true
-  },
-  "security": {
-    "auth": {
-      "selectedType": "gemini-api-key"
-    }
-  }
-}
-```
+::: warning 版本差异
+Gemini CLI 对自定义 Base URL 的支持可能随版本变化。如果变量未生效，请查看当前版本帮助和官方文档；无法自定义地址的版本不能直接接入。
+:::
 
 ## 使用
 
 ```bash
-# 启动交互模式
 gemini
-
-# 指定工作目录
-gemini /path/to/project
-
-# 单次问答
-gemini "解释这个项目结构"
-
-# 查看可用模型
-gemini models
+gemini "解释这个项目的目录结构"
 ```
 
-## 代码审查
+## 排查
 
-```bash
-# 审查指定文件
-gemini "review src/app.ts for bugs and suggest improvements"
-```
+| 现象 | 检查项 |
+|------|--------|
+| `401` | `GEMINI_API_KEY` 是否有效 |
+| `404` | Base URL 是否误加 `/v1`，模型 ID 是否存在 |
+| 参数错误 | 模型是否支持当前 Gemini 参数或多模态输入 |
 
-## 可用模型
-
-```bash
-# 章鱼中枢支持的 Gemini 系列
-gemini-2.5-flash     # 快速推理
-gemini-2.5-pro       # 高级推理
-gemini-2.0-flash     # 多模态任务
-```
-
-::: tip 提示
-- `GEMINI_API_KEY` 即你的章鱼中枢 API Key
-- `GOOGLE_GEMINI_BASE_URL` 为章鱼中枢 Base URL（不需要 `/v1` 后缀）
-- IDE 集成模式支持在 VS Code 等编辑器中内嵌使用
-:::
+模型列表会动态变化，请从模型广场获取准确 ID，不要长期依赖固定示例名称。

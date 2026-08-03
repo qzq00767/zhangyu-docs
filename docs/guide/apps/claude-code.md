@@ -1,69 +1,55 @@
 # Claude Code
 
-在终端中释放 Claude 的力量，瞬间搜索百万行代码库。
+Claude Code 可通过 Anthropic 兼容协议连接自定义网关。配置前请确认目标模型支持 `/v1/messages`。
 
 ## 安装
 
-```bash
-# Mac / Linux
-curl -fsSL https://claude.ai/install.sh | bash
+请优先参考 [Claude Code 官方文档](https://docs.anthropic.com/en/docs/claude-code/overview) 获取当前安装方式。使用 npm 时：
 
-# Windows (npm)
+```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
 ## 配置
 
-编辑 `~/.claude/settings.json`：
+编辑用户目录下的 `~/.claude/settings.json`：
 
 ```json
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "{{API_KEY}}",
-    "ANTHROPIC_BASE_URL": "https://zhangyuapi.com"
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_API_KEY",
+    "ANTHROPIC_BASE_URL": "https://api.zhangyuapi.com",
+    "ANTHROPIC_MODEL": "YOUR_CLAUDE_MODEL_ID"
   }
 }
 ```
 
+`ANTHROPIC_BASE_URL` 不要添加 `/v1`，Claude Code 会自行请求 `/v1/messages`。
+
+::: warning Key 安全
+配置文件包含明文 Key。请限制文件访问权限，避免同步到公开网盘或提交到仓库，并为 Claude Code 创建独立的限额 Key。
+:::
+
 ## 使用
 
 ```bash
-# 默认模型
+# 在当前目录启动
 claude
 
-# 指定模型
-claude --model claude-sonnet-4-6
+# 单次任务
+claude "概括这个项目的目录结构"
 
-# 在特定目录启动
-claude /path/to/your/project
+# 临时指定模型
+claude --model YOUR_CLAUDE_MODEL_ID
 ```
 
-## 常用命令
+## 排查
 
-| 命令 | 说明 |
-|------|------|
-| `claude` | 启动交互模式 |
-| `claude "提示词"` | 单次问答 |
-| `claude --model <name>` | 指定模型 |
-| `claude --resume` | 恢复上次会话 |
-| `claude config` | 配置管理 |
+| 现象 | 检查项 |
+|------|--------|
+| `401` | `ANTHROPIC_AUTH_TOKEN` 是否有效 |
+| `404` | Base URL 是否错误地添加了 `/v1` |
+| 模型不存在 | 从模型广场复制准确的 Claude 模型 ID |
+| 工具调用异常 | 目标模型和渠道是否支持 Anthropic 工具调用 |
 
-## 设置记忆文件
-
-创建 `~/.claude/CLAUDE.md` 可以在每次对话时自动注入项目背景和偏好：
-
-```markdown
-# 项目说明
-这是一个 React + TypeScript 项目，使用 Tailwind CSS。
-请遵循项目已有的代码风格。
-```
-
-## 多项目配置
-
-在不同项目目录下可以有不同的 `CLAUDE.md`，Claude Code 会自动读取当前工作目录的配置。
-
-::: tip 提示
-- `ANTHROPIC_AUTH_TOKEN` 即你的章鱼中枢 API Key
-- `ANTHROPIC_BASE_URL` 为章鱼中枢 Base URL（不需要 `/v1` 后缀）
-- 首次使用可能需要接受 Anthropic 的使用条款
-:::
+Claude Code 的配置字段可能随版本变化。如果环境变量未生效，请以官方文档和当前版本的 `claude --help` 为准。

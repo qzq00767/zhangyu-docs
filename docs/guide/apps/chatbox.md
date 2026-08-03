@@ -1,47 +1,27 @@
 # Chatbox
 
-简洁易用的 AI 桌面/移动端客户端，全平台支持。
+Chatbox 支持配置 OpenAI 兼容 API。不同版本的菜单名称可能略有差异。
 
 ## 安装
 
-从 [Chatbox 官网](https://chatboxai.app/) 下载，支持 Windows、macOS、Linux、iOS、Android。
+从 [Chatbox 官网](https://chatboxai.app/) 下载对应平台版本。
 
 ## 配置
 
-### 桌面端
-
-1. 打开 Chatbox → **设置** → **模型**
-2. 选择 **OpenAI API**
-3. 填入配置：
+1. 打开设置中的模型或模型提供商页面。
+2. 选择 OpenAI API 或 OpenAI Compatible。
+3. 填入以下信息：
 
 | 设置项 | 值 |
 |--------|-----|
-| **API 地址** | `https://zhangyuapi.com/v1` |
-| **API 密钥** | 你的章鱼中枢 API Key |
-| **模型** | 选择需要的模型（如 `gpt-4o`） |
+| API 地址 / Base URL | `https://api.zhangyuapi.com/v1` |
+| API Key | 在平台创建的独立 Key |
+| 模型 | 从模型广场复制的模型 ID |
 
-### 移动端
+保存后发送一条简短消息，并在平台使用日志中确认请求。
 
-移动端配置相同，在设置页面填入 Base URL 和 API Key。
+::: warning 客户端存储
+Chatbox 会在本机保存配置。请使用单独的低额度 Key，并保护本机账号和同步数据。移动端丢失后应立即禁用对应 Key。
+:::
 
-## 生图设置
-
-Chatbox 支持对话式生图：
-1. 设置 → 模型 → 选择 `gpt-image-2` 等绘图模型
-2. 在对话中直接描述图片
-
-## 推荐模型
-
-| 场景 | 推荐模型 |
-|------|---------|
-| 日常聊天 | `gpt-4o` |
-| 翻译 | `gpt-4o-mini`（高性价比） |
-| 编程问答 | `claude-sonnet-4-6` |
-| 生图 | `gpt-image-2` |
-
-## Chatbox 优势
-
-- ✅ 数据本地存储，隐私安全
-- ✅ 全平台覆盖，数据同步
-- ✅ 界面简洁，开箱即用
-- ✅ 支持多会话管理
+如果返回 `404`，检查 Chatbox 是否又自动添加了一次 `/v1`；如果是，请尝试把地址改为 `https://api.zhangyuapi.com`。

@@ -1,7 +1,7 @@
 {
   "name": "zhangyu-api-docs",
   "version": "1.0.0",
-  "description": "章鱼中枢 AI 服务平台 API 文档",
+  "description": "章鱼公益平台开发文档",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev docs",

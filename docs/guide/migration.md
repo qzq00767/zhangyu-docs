@@ -1,155 +1,128 @@
 # 从 OpenAI 迁移
 
-只需 3 步，5 分钟即可从 OpenAI 官方 API 切换到章鱼中枢。
+如果现有项目允许自定义 `base_url`，通常只需替换地址、API Key 和模型 ID。协议兼容不代表所有模型都支持完全相同的参数，上线前仍需完成实际调用验证。
 
-## 为什么迁移？
+::: danger 服务范围
+本平台不向中国大陆地区用户提供服务。迁移前请确认账号和使用场景符合 [用户协议](/legal/user-agreement)。
+:::
 
-| 对比 | 章鱼中枢 | OpenAI 官方 |
-|------|:------:|:------:|
-| 价格 | 折扣价 | 原价 |
-| 网络 | 国内直连 | 需科学上网 |
-| 封号风险 | 0 封号 | 随时无故封号 |
-| 额度有效期 | 永不过期 | 按充值周期 |
-| 多模型支持 | 一站式多厂商 | 仅 OpenAI |
+## 迁移前准备
+
+1. 在 [API 密钥](https://zhangyuapi.com/keys) 页面创建独立的迁移测试 Key。
+2. 在 [模型广场](https://zhangyuapi.com/pricing) 或 `/v1/models` 中确认目标模型 ID。
+3. 记录现有项目使用的流式输出、工具调用、结构化输出、图片输入等能力。
+4. 在测试环境完成迁移，不要直接替换生产配置。
 
 ## 三步迁移
 
-### 第 1 步：获取 API Key
+### 第一步：配置环境变量
 
-注册 [章鱼中枢](https://zhangyuapi.com)，在控制台创建 API Key。
+```bash
+ZHANGYU_API_KEY=YOUR_API_KEY
+ZHANGYU_BASE_URL=https://api.zhangyuapi.com/v1
+ZHANGYU_MODEL_ID=YOUR_MODEL_ID
+```
 
-### 第 2 步：修改 Base URL
+不要把真实 Key 写进源码或提交到 Git。
 
-只需要修改一个配置项 — 将 `api.openai.com` 替换为章鱼中枢的 Base URL。
+### 第二步：替换 Base URL
 
-### 第 3 步：验证
+::: code-group
 
-运行现有代码，接口响应格式完全兼容，无需任何业务逻辑改动。
-
-## 各语言迁移示例
-
-### Python (openai SDK)
-
-```python
-# 原 OpenAI 配置
-# client = OpenAI(api_key="sk-xxx")
-
-# 迁移到章鱼中枢 — 仅需加一行 base_url
+```python [Python]
+import os
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://zhangyuapi.com/v1",  # ← 新增
-    api_key="{{API_KEY}}"
+    api_key=os.environ["ZHANGYU_API_KEY"],
+    base_url=os.getenv("ZHANGYU_BASE_URL", "https://api.zhangyuapi.com/v1"),
 )
 
-# 其余代码完全不变
 response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello!"}]
+    model=os.environ["ZHANGYU_MODEL_ID"],
+    messages=[{"role": "user", "content": "返回 OK"}],
 )
+print(response.choices[0].message.content)
 ```
 
-### Node.js (openai SDK)
-
-```javascript
-// 原 OpenAI 配置
-// const client = new OpenAI({ apiKey: 'sk-xxx' });
-
-// 迁移到章鱼中枢 — 仅需加一行 baseURL
+```javascript [Node.js]
 import OpenAI from 'openai';
 
 const client = new OpenAI({
-  baseURL: 'https://zhangyuapi.com/v1',  // ← 新增
-  apiKey: '{{API_KEY}}'
+  apiKey: process.env.ZHANGYU_API_KEY,
+  baseURL: process.env.ZHANGYU_BASE_URL ?? 'https://api.zhangyuapi.com/v1'
 });
 
-// 其余代码完全不变
 const response = await client.chat.completions.create({
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello!' }]
+  model: process.env.ZHANGYU_MODEL_ID,
+  messages: [{ role: 'user', content: '返回 OK' }]
 });
+console.log(response.choices[0].message.content);
 ```
 
-### Claude Code
+:::
 
-```json
-// ~/.claude/settings.json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "{{API_KEY}}",
-    "ANTHROPIC_BASE_URL": "https://zhangyuapi.com"
-  }
-}
-```
+### 第三步：按场景验证
 
-### Codex CLI
+至少验证以下内容：
 
-```toml
-// ~/.codex/config.toml
-[model_providers.zhangyu]
-name = "OpenAI"
-base_url = "https://zhangyuapi.com/v1"
-wire_api = "responses"
-requires_openai_auth = true
-```
+- 非流式请求能否正常返回；
+- 流式请求能否正确解析并收到 `[DONE]`；
+- 模型 ID、参数名和响应字段是否符合现有代码预期；
+- 工具调用、结构化输出或多模态输入是否受目标模型支持；
+- 超时、重试、错误处理和费用记录是否符合预期。
 
-```json
-// ~/.codex/auth.json
-{
-  "OPENAI_API_KEY": "{{API_KEY}}"
-}
-```
+## 其他协议
 
-### Gemini CLI
+### Anthropic SDK
+
+Anthropic SDK 会自行拼接 `/v1/messages`，Base URL 不要带 `/v1`：
 
 ```bash
-// ~/.gemini/.env
-GOOGLE_GEMINI_BASE_URL=https://zhangyuapi.com
-GEMINI_API_KEY={{API_KEY}}
-GEMINI_MODEL=gemini-2.5-flash
+ANTHROPIC_AUTH_TOKEN=YOUR_API_KEY
+ANTHROPIC_BASE_URL=https://api.zhangyuapi.com
 ```
 
-### Cursor
+### Gemini CLI / SDK
 
-在 Cursor 设置中：
-1. 打开 Settings → Models
-2. 取消勾选 OpenAI API Key
-3. 在 "OpenAI Base URL" 填入 `https://zhangyuapi.com/v1`
-4. 在 "OpenAI API Key" 填入你的 API Key
-
-### 通用 curl
+Gemini 客户端通常会自行拼接 `/v1beta/models/...`：
 
 ```bash
-# 原 OpenAI
-curl https://api.openai.com/v1/chat/completions \
-  -H "Authorization: Bearer sk-xxx" \
-  -d '{ "model": "gpt-4o", "messages": [...] }'
-
-# 章鱼中枢 — 仅改 URL
-curl https://zhangyuapi.com/v1/chat/completions \
-  -H "Authorization: Bearer {{API_KEY}}" \
-  -d '{ "model": "gpt-4o", "messages": [...] }'
+GEMINI_API_KEY=YOUR_API_KEY
+GOOGLE_GEMINI_BASE_URL=https://api.zhangyuapi.com
+GEMINI_MODEL=YOUR_GEMINI_MODEL_ID
 ```
 
-## 兼容性说明
+### 通用 HTTP 请求
 
-章鱼中枢完全兼容以下接口协议，迁移后所有功能照常使用：
+```bash
+curl "https://api.zhangyuapi.com/v1/chat/completions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_ID",
+    "messages": [{"role": "user", "content": "返回 OK"}]
+  }'
+```
 
-| 协议 | 端点 | 兼容状态 |
-|------|------|:------:|
-| OpenAI Chat | `/v1/chat/completions` | ✅ 完全兼容 |
-| OpenAI Embeddings | `/v1/embeddings` | ✅ 完全兼容 |
-| OpenAI Models | `/v1/models` | ✅ 完全兼容 |
-| OpenAI Images | `/v1/images/*` | ✅ 完全兼容 |
-| OpenAI Audio | `/v1/audio/*` | ✅ 完全兼容 |
-| Claude Messages | `/v1/messages` | ✅ 完全兼容 |
-| Gemini | `/v1beta/models/*` | ✅ 完全兼容 |
+## 兼容性边界
 
-## URL 替换规则速查
+| 能力 | 说明 |
+|------|------|
+| Chat Completions | 常用文本、流式和工具调用字段通常可直接迁移 |
+| Responses API | 仅在目标模型和渠道支持时可用 |
+| 图片、音频、视频 | 参数、尺寸和返回格式可能因模型而不同 |
+| Anthropic / Gemini 原生协议 | 需要使用对应协议根地址和鉴权方式 |
+| 文件、Batch、GPTs 等扩展接口 | 不应默认可用，请以当前文档和实测结果为准 |
 
-| 官方地址 | 替换为 |
-|---------|-------|
-| `https://api.openai.com` | `https://zhangyuapi.com` |
-| `https://api.openai.com/v1` | `https://zhangyuapi.com/v1` |
-| `https://api.anthropic.com` | `https://zhangyuapi.com` |
-| `https://generativelanguage.googleapis.com` | `https://zhangyuapi.com` |
+如果出现 `404`，优先检查 URL 是否重复或缺少 `/v1`；如果出现 `400`，检查目标模型是否支持当前参数。
+
+## URL 替换速查
+
+| 原地址 | 迁移地址 |
+|--------|----------|
+| `https://api.openai.com/v1` | `https://api.zhangyuapi.com/v1` |
+| `https://api.anthropic.com` | `https://api.zhangyuapi.com` |
+| `https://generativelanguage.googleapis.com` | `https://api.zhangyuapi.com` |
+
+完成验证后，再逐步放量并通过 [使用日志](https://zhangyuapi.com/usage-logs/common) 观察错误率、延迟和费用。

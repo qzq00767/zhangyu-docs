@@ -1,54 +1,43 @@
-# 视频模型
+# <span class="api-method post">POST</span> 创建视频生成任务
 
-通过 API 生成视频。
+提交视频生成任务，支持文生视频和图生视频。
 
-## <span class="api-method post">POST</span> 生成视频
+返回任务 ID，可通过 GET 接口查询任务状态。
 
-### 接口地址
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/video/generations</code>
+</div>
 
-```bash
-POST https://zhangyuapi.com/v1/video/generations
-```
+## 鉴权
 
-### 请求示例
+`Authorization: Bearer YOUR_API_KEY`
 
-```bash
-curl -X POST "https://zhangyuapi.com/v1/video/generations" \
-  -H "Authorization: Bearer {{API_KEY}}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "kling-v1",
-    "prompt": "一只猫在屋顶上行走",
-    "duration": 5,
-    "resolution": "1080p"
-  }'
-```
+使用 Bearer Token 认证。
 
-### 参数说明
+## 请求体
+
+内容类型：`application/json`
 
 | 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | 模型名称 |
-| `prompt` | string | ✅ | 视频描述 |
-| `duration` | integer | - | 视频时长（秒） |
-| `resolution` | string | - | 分辨率：`720p`、`1080p` |
-| `fps` | integer | - | 帧率 |
+|---|---|:---:|---|
+| `model` | string | 否 | 模型/风格 ID |
+| `prompt` | string | 否 | 文本描述提示词 |
+| `image` | string | 否 | 图片输入 (URL 或 Base64) |
+| `duration` | number | 否 | 视频时长（秒） |
+| `width` | integer | 否 | 视频宽度 |
+| `height` | integer | 否 | 视频高度 |
+| `fps` | integer | 否 | 视频帧率 |
+| `seed` | integer | 否 | 随机种子 |
+| `n` | integer | 否 | 生成视频数量 |
+| `response_format` | string | 否 | 响应格式 |
+| `user` | string | 否 | 用户标识 |
+| `metadata` | - | 否 | 扩展参数 (如 negative_prompt, style, quality_level 等) |
 
-### 支持的模型
-
-| 模型 | 来源 | 说明 |
-|------|------|------|
-| `kling-v1` | 快手可灵 | 高质量文生视频 |
-| `kling-v1-5` | 快手可灵 | 可灵 1.5 版本 |
-| `veo-3` | Google | Google Veo 视频模型 |
-| `sora` | OpenAI | OpenAI 视频模型 |
-
-### 查询视频生成状态
+## 请求示例
 
 ```bash
-GET https://zhangyuapi.com/v1/video/generations/{task_id}
+curl -X POST "https://api.zhangyuapi.com/v1/video/generations" \
+  -H "Content-Type: application/json" \
+  -d '{}'
 ```
-
-::: tip 提示
-视频生成通常需要较长时间（数分钟到数十分钟），建议使用异步轮询方式获取结果。
-:::

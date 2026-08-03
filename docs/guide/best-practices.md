@@ -1,177 +1,112 @@
 # 生产接入建议
 
-在正式项目中使用章鱼中枢 API 的最佳实践。
+本页提供一套稳妥的生产接入基线。具体超时、并发和重试次数应根据模型、请求大小与业务容忍度调整。
 
-## 安全
+## 保护 API Key
 
-### 不要把 API Key 放在客户端
-
-::: danger 警告
-绝对不要将 API Key 硬编码在前端网页、移动 App 或客户端安装包中。API Key 相当于账户密码，泄露后任何人可以冒用你的额度。
+::: danger 禁止在客户端暴露 Key
+不要把 API Key 写入网页、浏览器扩展、移动 App、桌面安装包或公开仓库。前端应用应调用您自己的后端，由后端访问模型 API。
 :::
 
-正确做法：
-- **Web 应用**：在服务端调用 API，前端通过你自己的后端中转
-- **移动 App**：通过你的后端服务中转
-- **桌面应用**：使用环境变量或加密存储
-
-### 环境变量管理
+- 为开发、测试和生产环境创建不同 Key；
+- 为不同应用设置独立额度和有效期；
+- 使用环境变量或密钥管理服务保存 Key；
+- 日志中只保留 Key 的少量掩码字符；
+- 发现泄露时立即在控制台禁用并更换。
 
 ```bash
-# .env（不提交到 git）
-ZHANGYU_API_KEY=sk-xxxxxxxxxxxxxxxx
-ZHANGYU_BASE_URL=https://your-base-url.com
+ZHANGYU_API_KEY=YOUR_API_KEY
+ZHANGYU_BASE_URL=https://api.zhangyuapi.com/v1
+ZHANGYU_MODEL_ID=YOUR_MODEL_ID
 ```
 
-```python
-import os
-from openai import OpenAI
+## 设置超时
 
-client = OpenAI(
-    base_url=os.getenv("ZHANGYU_BASE_URL"),
-    api_key=os.getenv("ZHANGYU_API_KEY")
-)
-```
+以下数值仅作为初始参考：
 
-### API Key 轮换
-
-- 为不同应用创建独立的 API Key
-- 定期（建议每季度）轮换 Key
-- 在控制台设置 Key 的额度和有效期限制
-
----
-
-## 超时设置
-
-不同接口的推荐超时时间：
-
-| 接口 | 推荐超时 | 说明 |
-|------|:------:|------|
-| Chat（非流式） | 120s | 正常对话响应快 |
-| Chat（流式） | 300s | 首 token 超时设置 |
-| 图片 1K | 180s | Imagine2 1K 分辨率 |
-| 图片 2K | 300s | 中等分辨率 |
-| 图片 4K | 600s | 高分辨率，耗时长 |
-| 视频生成 | 600s+ | 异步任务，建议轮询 |
-| 嵌入 | 60s | 通常很快 |
-| 音频转录 | 120s | 取决于音频长度 |
+| 场景 | 建议起点 | 说明 |
+|------|:--------:|------|
+| 建立连接 | 10-20 秒 | 网络或 DNS 异常时快速失败 |
+| 普通非流式对话 | 120 秒 | 推理模型可能需要更长时间 |
+| 流式对话 | 300 秒 | 同时设置首包超时和总超时 |
+| 图片生成 | 180-600 秒 | 分辨率越高通常越慢 |
+| 音频转录 | 120-600 秒 | 与文件长度和大小有关 |
+| 视频生成 | 使用异步任务 | 提交后轮询状态，不要保持长连接 |
 
 ```python
-from openai import OpenAI
 import httpx
+from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://zhangyuapi.com/v1",
-    api_key="sk-xxx",
-    timeout=httpx.Timeout(300.0, connect=10.0)  # 300s 总超时
+    base_url="https://api.zhangyuapi.com/v1",
+    api_key="YOUR_API_KEY",
+    timeout=httpx.Timeout(300, connect=15),
 )
 ```
 
----
+## 谨慎重试
 
-## 重试与错误处理
+重试会创建新的上游请求，可能导致重复生成、重复扣费或业务副作用。只对确定可重试的错误执行有限重试。
 
-### 指数退避
+| 情况 | 建议 |
+|------|------|
+| `429` | 读取 `Retry-After`，使用指数退避和随机抖动 |
+| `500`、`502`、`503` | 可有限重试，建议最多 2-3 次 |
+| 连接失败且尚未收到响应 | 可有限重试 |
+| `400`、`401`、`403`、`404` | 不重试，先修正参数、权限或地址 |
+| `504`、`524` | 默认不要自动重试；上游可能已经开始处理并产生费用 |
 
 ```python
+import random
 import time
-from openai import OpenAI
+import requests
 
-def call_with_retry(messages, max_retries=3):
-    for attempt in range(max_retries):
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=messages
-            )
+def post_with_retry(url, headers, payload, max_attempts=3):
+    for attempt in range(max_attempts):
+        response = requests.post(url, headers=headers, json=payload, timeout=120)
+        if response.status_code not in {429, 500, 502, 503}:
+            response.raise_for_status()
             return response
-        except Exception as e:
-            if attempt == max_retries - 1:
-                raise
-            wait = 2 ** attempt  # 1s, 2s, 4s...
-            time.sleep(wait)
+        if attempt == max_attempts - 1:
+            response.raise_for_status()
+        retry_after = response.headers.get("Retry-After")
+        delay = float(retry_after) if retry_after else 2 ** attempt + random.random()
+        time.sleep(delay)
 ```
 
-### 可重试错误
+## 控制并发
 
-| 错误类型 | 建议 |
-|---------|------|
-| 429 Rate Limit | 等待后重试，使用指数退避 |
-| 5xx Server Error | 重试，间隔递增 |
-| Connection Error | 重试，最多 3 次 |
-| 401 Unauthorized | 不重试，检查 API Key |
-| 400 Bad Request | 不重试，检查参数 |
+- 从较小并发开始，根据实际延迟、错误率和 `429` 调整；
+- 使用队列、信号量或令牌桶限制并发；
+- 为长任务和实时对话设置不同的并发池；
+- 避免所有实例在同一时刻重试，可加入随机抖动；
+- 不要把某个固定并发值视为所有模型的通用上限。
 
----
+## 记录可排查日志
 
-## 图片接口建议
+建议记录：
 
-1. **默认使用 `response_format=url`**：不要默认使用 `b64_json`，会显著增加响应体积
-2. **及时下载保存**：拿到 URL 后尽快下载保存，URL 不保证永久有效
-3. **模型和尺寸匹配**：4K 图使用 `gpt-image-2-4k` 并传入 4K 尺寸
+- 请求时间、模型 ID、端点和 HTTP 状态码；
+- 平台或上游返回的请求 ID；
+- 首 Token 延迟、总耗时和重试次数；
+- 输入与输出 Token、费用和调用方标识；
+- 脱敏后的错误信息。
 
-```bash
-# ✅ 推荐
-curl ... -d '{"model":"gpt-image-2-1k","response_format":"url"}'
+不要记录完整 API Key。请求正文可能包含个人信息、商业数据或其他敏感内容，应默认不记录，确需记录时应脱敏并设置较短保存期限。
 
-# ❌ 不推荐（响应体积大、解析慢）
-curl ... -d '{"model":"gpt-image-2-1k","response_format":"b64_json"}'
-```
+## 控制成本
 
----
+- 在模型广场确认模型单价和计费单位；
+- 为不同应用设置独立 Key 和额度；
+- 限制最大输出 Token，避免无边界生成；
+- 对重复、可缓存的结果使用业务缓存；
+- 定期核对 [使用日志](https://zhangyuapi.com/usage-logs/common) 和 [钱包](https://zhangyuapi.com/wallet)。
 
-## 视频接口建议
+## 上线前检查
 
-1. **使用任务轮询**：不要依赖长连接等待到底
-2. **提交 → 查询 → 下载** 标准三步骤
-3. **记录 task_id**：方便后续查询和排查
-
-```python
-# 1. 提交任务
-task = submit_video_generation(prompt, model="grok-imagine-video")
-
-# 2. 轮询状态
-while True:
-    status = check_task_status(task.id)
-    if status == "completed":
-        break
-    time.sleep(5)
-
-# 3. 下载结果
-download_video(task.id, output_path="result.mp4")
-```
-
----
-
-## 并发控制
-
-- 控制并发请求数，避免触发速率限制
-- 建议单个 API Key 并发不超过 10
-- 大批量任务使用队列 + 限速器
-
-```python
-import asyncio
-from asyncio import Semaphore
-
-sem = Semaphore(5)  # 最多 5 个并发
-
-async def limited_call(messages):
-    async with sem:
-        return await async_client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages
-        )
-```
-
----
-
-## 日志记录
-
-建议记录以下信息方便排查：
-
-- 模型名称
-- 请求参数（input 内容可按需脱敏）
-- 响应 ID
-- 耗时
-- Token 消耗
-- 错误信息（如有）
+- Key 未出现在源码、构建产物和日志中；
+- 超时、重试和并发限制已经配置；
+- 关键请求具有监控、告警和费用上限；
+- 已验证目标模型的流式、工具调用及多模态能力；
+- 已准备降级模型或暂停调用方案；
+- 数据处理方式符合 [隐私政策](/legal/privacy-policy) 和用户所在地法律。

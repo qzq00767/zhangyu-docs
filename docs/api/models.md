@@ -1,60 +1,77 @@
-# <span class="api-method get">GET</span> 列出模型
+# <span class="api-method get">GET</span> 原生OpenAI格式
 
-列出当前 API Key 可用的所有模型及其信息。
+获取当前可用的模型列表。
 
-## 接口地址
+根据请求头自动识别返回格式：
 
-```bash
-GET https://zhangyuapi.com/v1/models
-```
+*   包含 `x-api-key` 和 `anthropic-version` 头时返回 Anthropic 格式
+*   包含 `x-goog-api-key` 头或 `key` 查询参数时返回 Gemini 格式
+*   其他情况返回 OpenAI 格式
+
+<div class="api-endpoint">
+  <span class="api-method get">GET</span>
+  <code>https://api.zhangyuapi.com/v1/models</code>
+</div>
+
+## 鉴权
+
+`Authorization: Bearer YOUR_API_KEY`
+
+使用 Bearer Token 认证。
+
+## 查询参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `key` | string | 否 | Google API Key (用于 Gemini 格式) |
+
+## 请求头参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `x-api-key` | string | 否 | Anthropic API Key (用于 Claude 格式) |
+| `anthropic-version` | string | 否 | Anthropic API 版本 |
+| `x-goog-api-key` | string | 否 | Google API Key (用于 Gemini 格式) |
 
 ## 请求示例
 
 ```bash
-curl "https://zhangyuapi.com/v1/models" \
-  -H "Authorization: Bearer {{API_KEY}}"
+curl -X GET "https://api.zhangyuapi.com/v1/models" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-## 响应示例
+## 响应体
+
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `application/json` |
+| `401` | `application/json` |
+
+### 200 响应示例
 
 ```json
 {
   "object": "list",
   "data": [
     {
-      "id": "gpt-4o",
+      "id": "gpt-4",
       "object": "model",
-      "created": 1700000000,
+      "created": 0,
       "owned_by": "openai"
-    },
-    {
-      "id": "claude-sonnet-4-6",
-      "object": "model",
-      "created": 1700000000,
-      "owned_by": "anthropic"
-    },
-    {
-      "id": "gemini-2.5-flash",
-      "object": "model",
-      "created": 1700000000,
-      "owned_by": "google"
     }
   ]
 }
 ```
 
-## 响应字段
+### 401 响应示例
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `object` | string | 固定为 `list` |
-| `data[].id` | string | 模型唯一标识符 |
-| `data[].object` | string | 固定为 `model` |
-| `data[].created` | integer | 模型创建时间戳 |
-| `data[].owned_by` | string | 模型所属组织 |
-
-## 获取单个模型
-
-```bash
-GET https://zhangyuapi.com/v1/models/gpt-4o
+```json
+{
+  "error": {
+    "message": "string",
+    "type": "string",
+    "param": "string",
+    "code": "string"
+  }
+}
 ```

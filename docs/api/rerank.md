@@ -1,66 +1,63 @@
-# RAG — 重排序（Reranker）
+# <span class="api-method post">POST</span> 文档重排序
 
-对搜索结果进行语义重排序，提升 RAG 检索质量。
+根据查询对文档列表进行相关性重排序
 
-## <span class="api-method post">POST</span> 重排序
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/rerank</code>
+</div>
 
-### 接口地址
+## 鉴权
+
+`Authorization: Bearer YOUR_API_KEY`
+
+使用 Bearer Token 认证。
+
+## 请求体
+
+内容类型：`application/json`
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|:---:|---|
+| `model` | string | 是 | - |
+| `query` | string | 是 | 查询文本 |
+| `documents` | array&lt;string \| object&gt; | 是 | 要重排序的文档列表 |
+| `top_n` | integer | 否 | 返回前 N 个结果 |
+| `return_documents` | boolean | 否 | 默认值：`false` |
+
+## 请求示例
 
 ```bash
-POST https://zhangyuapi.com/v1/rerank
-```
-
-### 请求示例
-
-```bash
-curl -X POST "https://zhangyuapi.com/v1/rerank" \
-  -H "Authorization: Bearer {{API_KEY}}" \
+curl -X POST "https://api.zhangyuapi.com/v1/rerank" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "bge-reranker-v2-m3",
-    "query": "什么是量子计算？",
+    "model": "rerank-english-v2.0",
+    "query": "string",
     "documents": [
-      "量子计算是利用量子力学原理进行计算的技术。",
-      "经典计算机使用二进制位进行计算。",
-      "人工智能是计算机科学的一个分支。"
-    ],
-    "top_n": 2
+      "string"
+    ]
   }'
 ```
 
-### 参数说明
+## 响应体
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `model` | string | ✅ | 重排序模型名称 |
-| `query` | string | ✅ | 查询文本 |
-| `documents` | array | ✅ | 待排序的文档列表 |
-| `top_n` | integer | - | 返回前 N 个结果 |
-| `return_documents` | boolean | - | 是否返回文档原文，默认 `true` |
+| 状态码 | 内容类型 |
+|---:|---|
+| `200` | `application/json` |
 
-### 响应示例
+### 200 响应示例
 
 ```json
 {
-  "object": "list",
-  "model": "bge-reranker-v2-m3",
+  "id": "string",
   "results": [
     {
       "index": 0,
-      "relevance_score": 0.95,
-      "document": "量子计算是利用量子力学原理进行计算的技术。"
-    },
-    {
-      "index": 2,
-      "relevance_score": 0.12,
-      "document": "人工智能是计算机科学的一个分支。"
+      "relevance_score": 0,
+      "document": {}
     }
-  ]
+  ],
+  "meta": {}
 }
 ```
-
-### 使用场景
-
-- **RAG 优化**：对向量检索的候选文档重排序，将最相关的结果优先送给 LLM
-- **搜索引擎**：提升搜索结果的相关性排序
-- **问答系统**：精确定位最匹配的文档片段

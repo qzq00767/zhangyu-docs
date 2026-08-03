@@ -1,72 +1,35 @@
-# 音频接口
+# <span class="api-method post">POST</span> 音频转录
 
-语音转文字和文字转语音。
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/v1/audio/transcriptions</code>
+</div>
 
-## <span class="api-method post">POST</span> 音频转文字（Transcription）
+## 鉴权
 
-### 接口地址
+`Authorization: Bearer YOUR_API_KEY`
 
-```bash
-POST https://zhangyuapi.com/v1/audio/transcriptions
-```
+使用 Bearer Token 认证。
 
-### 请求示例
+## 请求体
 
-```bash
-curl -X POST "https://zhangyuapi.com/v1/audio/transcriptions" \
-  -H "Authorization: Bearer {{API_KEY}}" \
-  -F "file=@audio.mp3" \
-  -F "model=whisper-1" \
-  -F "language=zh" \
-  -F "response_format=json"
-```
-
-### 参数说明
+内容类型：`multipart/form-data`
 
 | 参数 | 类型 | 必填 | 说明 |
-|------|------|:----:|------|
-| `file` | file | ✅ | 音频文件 |
-| `model` | string | ✅ | 模型名称，如 `whisper-1` |
-| `language` | string | - | ISO-639-1 语言代码 |
-| `prompt` | string | - | 引导词 |
-| `response_format` | string | - | `json`、`text`、`srt`、`vtt` |
-| `temperature` | number | - | 采样温度 |
+|---|---|:---:|---|
+| `file` | file | 是 | 音频文件&lt;br&gt;格式：`binary` |
+| `model` | string | 是 | - |
+| `language` | string | 否 | ISO-639-1 语言代码 |
+| `prompt` | string | 否 | - |
+| `response_format` | string | 否 | 默认值：`"json"`&lt;br&gt;可选值：`"json" \| "text" \| "srt" \| "verbose_json" \| "vtt"` |
+| `temperature` | number | 否 | - |
+| `timestamp_granularities` | array&lt;string&gt; | 否 | - |
 
-### 支持的音频格式
-
-- mp3, mp4, mpeg, mpga, m4a, wav, webm, flac, ogg
-
-## <span class="api-method post">POST</span> 文字转语音（TTS）
-
-### 接口地址
+## 请求示例
 
 ```bash
-POST https://zhangyuapi.com/v1/audio/speech
+curl -X POST "https://api.zhangyuapi.com/v1/audio/transcriptions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F file="string" \
+  -F model="whisper-1"
 ```
-
-### 请求示例
-
-```bash
-curl -X POST "https://zhangyuapi.com/v1/audio/speech" \
-  -H "Authorization: Bearer {{API_KEY}}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "tts-1",
-    "input": "你好，欢迎使用章鱼中枢 AI 服务平台。",
-    "voice": "alloy",
-    "speed": 1.0,
-    "response_format": "mp3"
-  }' \
-  --output speech.mp3
-```
-
-### 可用的语音
-
-| Voice | 风格 |
-|-------|------|
-| `alloy` | 中性 |
-| `echo` | 男声 |
-| `fable` | 英式 |
-| `onyx` | 深沉 |
-| `nova` | 温柔 |
-| `shimmer` | 清晰 |

@@ -1,94 +1,87 @@
-# Base URL 与 API Key
+# API 地址与密钥
 
-## Base URL
+## 先区分网站地址和 API 地址
 
-章鱼中枢的 API 入口地址为：
+| 用途 | 地址 |
+|------|------|
+| 网站、登录与控制台 | `https://zhangyuapi.com` |
+| OpenAI 兼容 Base URL | `https://api.zhangyuapi.com/v1` |
+| Anthropic / Gemini 协议根地址 | `https://api.zhangyuapi.com` |
 
-```
-https://zhangyuapi.com
-```
-
-### URL 使用规则（重要）
-
-不同场景需要不同的 URL 格式，务必区分：
-
-| 使用场景 | 正确 URL | 说明 |
-|---------|---------|------|
-| **OpenAI SDK** | `https://zhangyuapi.com/v1` | 带 `/v1`，SDK 自动拼接端点路径 |
-| **Anthropic SDK / Claude Code** | `https://zhangyuapi.com` | **不带** `/v1`，SDK 自动添加 `/v1/messages` |
-| **Gemini CLI / SDK** | `https://zhangyuapi.com` | **不带** `/v1`，SDK 自动拼接 |
-| **curl / 直接 HTTP 调用** | `https://zhangyuapi.com/v1/chat/completions` | 带完整路径 |
-| **Cursor（OpenAI 模式）** | `https://zhangyuapi.com/v1` | 带 `/v1` |
-| **Cursor（Anthropic 模式）** | `https://zhangyuapi.com` | **不带** `/v1` |
-| **NextChat** | `https://zhangyuapi.com` | **不带** `/v1`，应用自动拼接 |
-| **LobeChat** | `https://zhangyuapi.com/v1` | API 代理地址 |
-| **Cherry Studio** | `https://zhangyuapi.com/v1` | API 地址 |
-| **沉浸式翻译** | `https://zhangyuapi.com/v1/chat/completions` | 需要完整端点 URL |
-
-::: danger 常见错误
-```
-❌ 错误：Anthropic SDK 使用 https://zhangyuapi.com/v1
-   → 会导致请求变成 https://zhangyuapi.com/v1/v1/messages（404）
-
-✅ 正确：Anthropic SDK 使用 https://zhangyuapi.com
-   → SDK 自动拼接为 https://zhangyuapi.com/v1/messages
-```
+::: warning 不要混用
+`zhangyuapi.com` 主要用于网页和控制台，`api.zhangyuapi.com` 用于程序调用。本文示例使用控制台当前推荐的 API 地址；如果您的控制台展示了专属线路，请以控制台为准。
 :::
 
-### 为什么有的要 /v1 有的不要？
+## Base URL 怎么填
 
-| 工具/SDK | 行为 | 规则 |
-|---------|------|------|
-| **OpenAI Python/Node SDK** | `base_url` + `/chat/completions` | 你填的 URL 后直接拼接端点 → 需要 `/v1` |
-| **Anthropic SDK** | `base_url` + `/v1/messages` | SDK 内部自动加 `/v1/` → 不要重复加 |
-| **Gemini CLI** | `base_url` + `/v1beta/models/...` | CLI 自动加路径 → 不要加 `/v1` |
-| **NextChat** | `base_url` + `/v1/chat/completions` | 应用自动加 `/v1/` → 不要重复加 |
-| **curl** | 你写什么就是什么 | 需要写完整路径 |
+客户端对 Base URL 的拼接方式不同。先判断它会自动补哪一段路径：
 
-**简单记忆**：OpenAI 官方 SDK 填带 `/v1` 的；其他 SDK/工具看文档说明，不确定时先用不带 `/v1` 的试。
+| 使用场景 | 填写内容 | 最终请求示例 |
+|---------|---------|-------------|
+| OpenAI Python / Node.js SDK | `https://api.zhangyuapi.com/v1` | `/v1/chat/completions` |
+| Anthropic SDK / Claude Code | `https://api.zhangyuapi.com` | `/v1/messages` |
+| Gemini CLI / Gemini SDK | `https://api.zhangyuapi.com` | `/v1beta/models/...` |
+| curl / 直接 HTTP 请求 | 填完整端点 | `https://api.zhangyuapi.com/v1/chat/completions` |
+| OpenAI 兼容应用 | 通常填 `https://api.zhangyuapi.com/v1` | 由应用补 `/chat/completions` |
 
-### 特殊路线
+### 简单判断方法
 
-高用量用户（日刷百刀以上）可联系客服获取专属加速路线。
+- 客户端自动补 `/chat/completions`：填写带 `/v1` 的地址。
+- 客户端自动补 `/v1/messages` 或 `/v1beta/models`：填写不带 `/v1` 的根地址。
+- 配置项要求“完整接口地址”：填写包含端点路径的完整 URL。
 
----
-
-## API Key
-
-### 获取方式
-
-1. 登录 [章鱼中枢控制台](https://zhangyuapi.com/dashboard)
-2. 进入 **API 密钥** 页面
-3. 点击 **新建**，设置名称、分组、额度限制
-4. 复制生成的 Key（格式：`sk-xxxxxxxxxxxxxxxx`）
-
-### 使用方式
-
-在所有 API 请求的 Header 中携带：
-
-```bash
-Authorization: Bearer sk-你的API密钥
-```
-
-### 安全建议
-
-::: warning 注意
-- API Key 相当于账户密码，请勿泄露
-- 不要在客户端代码（浏览器、移动 App）中直接暴露
-- 建议通过后端服务中转 API 请求
-- 为不同应用创建独立的 API Key
-- 定期轮换 API Key
+::: danger 常见的重复路径错误
+Anthropic SDK 如果填写 `https://api.zhangyuapi.com/v1`，可能拼成 `/v1/v1/messages` 并返回 `404`。Anthropic 和 Gemini 客户端通常填写 `https://api.zhangyuapi.com`。
 :::
 
----
+## 常用配置速查
 
-## 快速测试
+| 工具 | 推荐地址 |
+|------|---------|
+| OpenAI SDK | `https://api.zhangyuapi.com/v1` |
+| Cursor、Cline、Cherry Studio 的 OpenAI 模式 | `https://api.zhangyuapi.com/v1` |
+| Claude Code | `https://api.zhangyuapi.com` |
+| Gemini CLI | `https://api.zhangyuapi.com` |
+| 沉浸式翻译等要求完整端点的工具 | `https://api.zhangyuapi.com/v1/chat/completions` |
 
-配置完成后，用以下命令测试连通性：
+第三方应用可能在升级后改变配置字段或路径拼接方式。如果出现 `404`，请查看实际请求 URL 是否重复或缺少 `/v1`。
 
-```bash
-curl https://zhangyuapi.com/v1/models \
-  -H "Authorization: Bearer sk-你的API密钥"
+## 获取 API Key
+
+1. 登录 [控制台](https://zhangyuapi.com/dashboard)。
+2. 打开 [API 密钥](https://zhangyuapi.com/keys)。
+3. 点击“新建”，按用途设置名称、分组、额度和有效期。
+4. 复制并妥善保存生成的 Key。
+
+请求时通过 `Authorization` Header 传入：
+
+```http
+Authorization: Bearer YOUR_API_KEY
 ```
 
-成功会返回可用模型列表。
+### 安全要求
+
+- 不要把 Key 写入浏览器端、移动 App 或公开仓库；
+- 为不同应用、环境和团队成员创建独立 Key；
+- 使用服务端环境变量或密钥管理服务保存 Key；
+- 设置合理额度，并定期检查使用日志；
+- 发现泄露时立即禁用旧 Key，不要只修改代码。
+
+## 连通性测试
+
+Models API 的请求体最简单，适合验证地址和鉴权：
+
+```bash
+curl "https://api.zhangyuapi.com/v1/models" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+常见结果：
+
+| 状态码 | 含义 |
+|:------:|------|
+| `200` | 地址和 Key 可用 |
+| `401` | Key 缺失、无效或已禁用 |
+| `402` | 余额或额度不足 |
+| `404` | Base URL 或端点路径错误 |
+| `429` | 达到当前速率或并发限制 |
