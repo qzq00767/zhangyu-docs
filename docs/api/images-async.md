@@ -9,6 +9,7 @@
 | 操作 | 方法 | 路径 |
 |---|---|---|
 | 提交任务 | `POST` | `/async-images/v1/tasks` |
+| 提交图片编辑任务 | `POST` | `/async-images/v1/edits` |
 | 查询任务 | `GET` | `/async-images/v1/tasks/{task_id}` |
 | 仅重试图片保存 | `POST` | `/async-images/v1/tasks/{task_id}/retry-save` |
 | 读取图片 | `GET` / `HEAD` | `/media/{image_id}`，使用成功结果返回的完整 URL |
@@ -72,7 +73,7 @@ Idempotency-Key: image-order-20261022-001
 
 可选参数通过接口校验不代表模型一定支持。首次接入建议只发送 `model`、`prompt` 和 `n`，成功后再按模型能力添加参数。
 
-当前异步接口仅支持标准 JSON 图片生成请求，不支持 multipart 图片编辑、聊天接口图像生成或厂商自定义任务协议，暂不提供回调、SSE 和任务取消功能。
+本节的 `/async-images/v1/tasks` 只接收标准 JSON 文生图。参考图、蒙版及图片编辑使用 [`POST /async-images/v1/edits`](/api/images-edit#异步图片编辑)，查询和重试保存仍使用本页接口。聊天接口图像生成尚未接入，暂不提供回调、SSE 和任务取消功能。
 
 ### 请求示例
 

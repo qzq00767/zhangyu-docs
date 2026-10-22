@@ -40,6 +40,7 @@ AI 图像生成接口。
 
 - <span class="api-method post">POST</span> [生成图像](/api/images) `/v1/images/generations`
 - <span class="api-method post">POST</span> [提交异步图像任务](/api/images-async#提交任务) `/async-images/v1/tasks`
+- <span class="api-method post">POST</span> [提交异步图片编辑任务](/api/images-edit#异步图片编辑) `/async-images/v1/edits`
 - <span class="api-method get">GET</span> [查询异步图像任务](/api/images-async#查询任务) `/async-images/v1/tasks/{task_id}`
 - <span class="api-method post">POST</span> [重试异步图片保存](/api/images-async#仅重试图片保存) `/async-images/v1/tasks/{task_id}/retry-save`
 - <span class="api-method post">POST</span> [编辑图像](/api/images-edit) `/v1/images/edits/`

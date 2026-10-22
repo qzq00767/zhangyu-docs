@@ -13,7 +13,54 @@
 
 图片链接从生成结果就绪起有效 **12 小时**，到期返回 `410`，磁盘文件每小时清理。需要长期使用的图片请在有效期内保存到自己的存储。
 
-这是同步图片编辑接口；`/async-images/v1/tasks` 目前仍只支持文生图，没有接入图片编辑任务。
+需要提交后轮询结果时，使用下方的 [异步图片编辑](#异步图片编辑)。同步路径不会通过 `async:true` 自动切换。
+
+## 异步图片编辑
+
+```text
+POST https://api.zhangyuapi.com/async-images/v1/edits
+POST https://zhangyuapi.com/async-images/v1/edits
+```
+
+接收完整参考图、蒙版和表单后返回 HTTP `202` 与任务 ID，后台调用 `/v1/images/edits` 生成、保存图片。查询及重试保存与 [异步文生图](/api/images-async) 共用接口。
+
+```bash
+curl "https://api.zhangyuapi.com/async-images/v1/edits" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Idempotency-Key: edit-order-20261022-001" \
+  -F "model=YOUR_IMAGE_MODEL" \
+  -F "image=@/path/to/image.png" \
+  -F "mask=@/path/to/mask.png" \
+  -F "prompt=将背景替换为海边风景" \
+  -F "n=1"
+```
+
+`mask` 可省略；多图模型可改为重复提交 `image[]`。上传限制与下方同步编辑一致。请求头中的 `Idempotency-Key` 必填，为 8～128 位英文字母、数字或 `_.:-`。同一次提交重试时沿用原值，保持文件内容、文件名、字段顺序和参数不变；multipart 边界可以改变。同一枚 Key 下文生图和编辑任务也共用幂等键空间，更换操作或参数应使用新值。
+
+成功接收示例：
+
+```json
+{
+  "id": "img_任务ID",
+  "status": "queued",
+  "created_at": "UTC时间",
+  "expires_at": null,
+  "status_url": "/async-images/v1/tasks/img_任务ID"
+}
+```
+
+建议每 3 秒查询一次：
+
+```bash
+curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_任务ID" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+`status` 为 `succeeded` 后，从 `data[].url` 获取自己域名的图片链接。异步编辑中，上游返回 URL 或 Base64 都会先保存，再统一返回图片链接；保存完成后有效 12 小时，每小时清理。生成失败或结果不确定时不会自动重新生成；`save_failed` 只能通过 `/async-images/v1/tasks/{task_id}/retry-save` 重试保存。
+
+参考图和蒙版在排队期间加密保存在服务器，生成处理结束后释放。同步上传和异步排队输入共用 768 MiB 上传预算；因此 200 是任务与工作线程配置上限，不代表可同时接收 200 个最大上传。上传预算不足时返回 `429`，磁盘余量不足时返回 `503`。
+
+上游支持 JSON 编辑格式时，也可向这个新地址提交 `application/json`，上限 256 KiB，其余参数保持该模型原格式。暂不提供回调、生成阶段 SSE 或任务取消功能。
 
 ## 鉴权
 
