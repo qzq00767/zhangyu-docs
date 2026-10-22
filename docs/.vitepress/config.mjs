@@ -57,6 +57,7 @@ const sidebar = {
           collapsed: true,
           items: [
             { text: '生成图像 POST', link: '/api/images' },
+            { text: '异步生成图像', link: '/api/images-async' },
             { text: '编辑图像 POST', link: '/api/images-edit' },
             { text: 'Gemini原生格式 POST', link: '/api/images-gemini' },
             { text: 'OpenAI聊天格式 POST', link: '/api/images-gemini-chat' },
