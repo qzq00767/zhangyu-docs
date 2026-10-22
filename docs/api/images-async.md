@@ -2,7 +2,7 @@
 
 异步接口先接收生成任务并返回任务 ID，后台调用模型、保存图片。客户端轮询任务，状态为 `succeeded` 后取得图片链接。
 
-这套接口需要客户端主动接入“提交 + 查询”流程。在原同步请求里添加 `async: true` 或 `stream: true` 不会切换成异步任务；现有 SDK 的标准图片生成方法也不会自动完成本页流程。
+客户端需分别调用提交任务和查询任务接口，完成异步生成流程。同步接口的 `async: true`、`stream: true` 参数及 SDK 标准图片生成方法均不支持自动切换至该流程。
 
 ## 接口地址
 
@@ -13,7 +13,7 @@
 | 仅重试图片保存 | `POST` | `/async-images/v1/tasks/{task_id}/retry-save` |
 | 读取图片 | `GET` / `HEAD` | `/media/{image_id}`，使用成功结果返回的完整 URL |
 
-推荐使用 `https://api.zhangyuapi.com`。`https://zhangyuapi.com` 也支持这套接口，两个入口共用任务，查询时须使用提交任务的同一枚 API Key。
+推荐使用 `https://api.zhangyuapi.com`。`https://zhangyuapi.com` 同样支持异步图像接口，两个入口共用任务，查询时须使用提交任务的同一枚 API Key。
 
 ::: warning 路径不要额外加 /v1
 完整提交地址是 `https://api.zhangyuapi.com/async-images/v1/tasks`。
@@ -62,7 +62,7 @@ Idempotency-Key: image-order-20261022-001
 | `size` | string | 否 | 最多 64 个字符，例如 `1024x1024`，取值须符合模型限制 |
 | `quality` | string | 否 | 最多 64 个字符，取值取决于模型 |
 | `style` | string | 否 | 最多 64 个字符，取值取决于模型 |
-| `response_format` | string | 否 | `url` 或 `b64_json`，控制请求上游的格式；异步成功结果始终返回本站图片 URL |
+| `response_format` | string | 否 | `url` 或 `b64_json`，指定模型生成结果的格式；任务成功后均通过 `data[].url` 返回图片下载地址 |
 | `background` | string | 否 | `transparent`、`opaque` 或 `auto` |
 | `output_format` | string | 否 | `png`、`jpeg` 或 `webp` |
 | `output_compression` | integer | 否 | `0`～`100` |
@@ -72,7 +72,7 @@ Idempotency-Key: image-order-20261022-001
 
 可选参数通过接口校验不代表模型一定支持。首次接入建议只发送 `model`、`prompt` 和 `n`，成功后再按模型能力添加参数。
 
-当前支持标准 JSON 图片生成，不支持通过这套异步任务提交 multipart 图片编辑、聊天接口生图或厂商自定义任务协议，也没有回调、SSE 和取消任务接口。
+当前异步接口仅支持标准 JSON 图片生成请求，不支持 multipart 图片编辑、聊天接口图像生成或厂商自定义任务协议，暂不提供回调、SSE 和任务取消功能。
 
 ### 请求示例
 
@@ -154,12 +154,12 @@ curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_0123456789abcdef01234
 |---|---|---|
 | `queued` | 等待调用模型 | 继续查询 |
 | `generating` | 模型生成中 | 继续查询，不重复提交 |
-| `preparing` | 解析上游结果，整理图片 | 继续查询 |
+| `preparing` | 处理生成结果，准备图片 | 继续查询 |
 | `saving` | 下载或保存图片中 | 继续查询；此时尚不提供结果 URL |
 | `succeeded` | 所有图片已保存成功 | 读取 `data[].url`，停止查询 |
 | `save_failed` | 图片保存失败 | 停止轮询，可调用“仅重试图片保存”接口 |
 | `failed` | 请求被拒绝、响应不支持或排队超时等 | 停止查询，检查 `error` |
-| `indeterminate` | 无法确认上游是否已完成生成 | 停止查询，不自动重新生成；先核对使用日志 |
+| `indeterminate` | 无法确认模型是否已完成生成 | 停止查询，不自动重新生成；先核对使用日志 |
 | `expired` | 任务或图片已过期 | 停止查询，原图片链接不可继续使用 |
 
 ### 成功结果
@@ -203,11 +203,11 @@ curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_0123456789abcdef01234
 
 ## 读取与保存图片
 
-成功后，直接打开或下载 `data[].url`。图片链接无需 `Authorization` 请求头，持有链接的人都可以读取，请按临时分享链接保管。
+任务成功后，可通过 `data[].url` 访问或下载图片。图片访问无需 `Authorization` 请求头，任何持有有效链接的用户均可访问，请妥善保管链接。
 
-图片有效期为**全部保存成功后 12 小时**，以 `expires_at` 为准；到期读取立即返回 HTTP `410`。服务器每小时清理一次过期文件，物理文件尚未删除也不能继续访问。
+图片有效期为**全部保存成功后 12 小时**，具体到期时间以 `expires_at` 为准。链接过期后，访问返回 HTTP `410`。
 
-需要长期保存时，请在到期前下载到自己的存储。当前图片链接和下载响应中的文件名可能没有扩展名，浏览器通过响应的 `Content-Type` 显示图片。本地保存应按实际类型选择 `.png`、`.jpg`、`.webp` 或 `.gif`；不要假定所有图片都是 PNG，也不要给远程 URL 直接加 `.png`。
+如需长期保存，请在有效期内下载图片。图片格式以响应头 `Content-Type` 为准，保存文件时应使用对应的扩展名（`.png`、`.jpg`、`.webp` 或 `.gif`）。请直接使用接口返回的完整 URL，无需追加文件扩展名。
 
 ## 仅重试图片保存
 

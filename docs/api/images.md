@@ -11,10 +11,10 @@
 
 | 方式 | 接口 | 返回结果 |
 |---|---|---|
-| 同步 | `POST /v1/images/generations` | 标准图片响应；上游返回 URL 时替换为本站图片链接，并在读取时流式中转、缓存；只返回 Base64 时保留 Base64 响应，目前不额外落盘 |
-| 异步 | `POST /async-images/v1/tasks` | 先返回任务 ID；图片全部生成、保存成功后，查询结果统一返回本站图片 URL |
+| 同步 | `POST /v1/images/generations` | 生成完成后返回标准图片响应，结果为图片 URL 或 Base64 数据，具体格式取决于模型和请求参数 |
+| 异步 | `POST /async-images/v1/tasks` | 提交后返回任务 ID；图片全部生成并保存成功后，通过查询接口获取图片下载地址 |
 
-图片文件的流式传输不需要设置 `stream: true`。当前同步中转接口不支持生成阶段的 SSE，请省略 `stream` 或设置为 `false`。
+图片文件的流式传输不需要设置 `stream: true`。当前同步图像生成接口不支持生成阶段的 SSE，请省略 `stream` 或设置为 `false`。
 
 ## 鉴权
 
@@ -35,8 +35,8 @@
 | `background` | string | 否 | - |
 | `moderation` | string | 否 | 控制 `gpt-image-1` 生成的图像的内容审核级别。必须为`低，` 以进行限制较少的筛选或`自动`（默认值）。 |
 | `quality` | string | 否 | 将生成的图像的质量。 |
-| `response_format` | string | 否 | `url` 或 `b64_json`，具体支持情况取决于模型。上游返回 Base64 时，同步接口保留 Base64 响应。 |
-| `stream` | boolean | 否 | 省略或设为 `false`，当前同步中转不支持生成阶段的 SSE。 |
+| `response_format` | string | 否 | `url` 或 `b64_json`，具体支持情况取决于模型。生成结果为 Base64 数据时，响应中保留该格式。 |
+| `stream` | boolean | 否 | 省略或设为 `false`，当前同步图像生成接口不支持生成阶段的 SSE。 |
 | `style` | string | 否 | - |
 | `user` | string | 否 | - |
 
