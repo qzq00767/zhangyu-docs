@@ -5,6 +5,16 @@
   <code>https://api.zhangyuapi.com/v1/images/edits/</code>
 </div>
 
+支持 `api.zhangyuapi.com` 和 `zhangyuapi.com` 两个入口，路径末尾有无 `/` 均可。继续使用原来的 Key、模型和调用参数。
+
+## 图片链接与保存
+
+此接口同步等待模型生成，标准响应中的 `data[].url` 统一改为 `https://api.zhangyuapi.com/media/随机图片ID`，后台立即缓存图片。打开链接时可边下载边转发，不必等待整张图片保存完毕。上游返回 `b64_json` 时保持原样，不额外保存 Base64 图片。
+
+图片链接从生成结果就绪起有效 **12 小时**，到期返回 `410`，磁盘文件每小时清理。需要长期使用的图片请在有效期内保存到自己的存储。
+
+这是同步图片编辑接口；`/async-images/v1/tasks` 目前仍只支持文生图，没有接入图片编辑任务。
+
 ## 鉴权
 
 `Authorization: Bearer YOUR_API_KEY`
@@ -26,6 +36,23 @@
 | `user` | string | 否 | 最终用户的唯一标识符，用于区分调用来源。 |
 | `model` | string | 否 | - |
 
+参考图字段支持 `image`、重复的 `image[]`、`images` 或 `images[]`；具体字段名和多图能力以所用模型为准。参考图、蒙版及其他表单字段会保留后转发给 New API。
+
+## 中转限制
+
+| 项目 | 限制 |
+|---|---|
+| multipart 请求总大小 | 128 MiB，包含表单开销 |
+| 单个上传文件 | 50 MiB |
+| 参考图数量 | 最多 16 张，模型可能有更低限制 |
+| 同时接收上传 | 4 路；繁忙时返回 `429` |
+| 生成并发 | 与同步文生图共享 200 上限，并受存储预留限制 |
+| 上传接收总时限 | 300 秒 |
+| 返回 URL 图片大小 | 单张最多 20 MiB |
+| JSON 编辑请求 | 最多 256 KiB，需上游模型支持相应 JSON 格式 |
+
+`stream` 请省略或设为 `false`。图片文件的流式转发不需要设置 `stream:true`。返回 `429` 或 `503` 时遵循 `Retry-After`；已提交生成后超时，不要自动重提以免重复计费。
+
 ## 请求示例
 
 ```bash
@@ -33,4 +60,28 @@ curl -X POST "https://api.zhangyuapi.com/v1/images/edits/" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -F "image=@/path/to/image.png" \
   -F "prompt=将背景替换为海边风景"
+```
+
+支持多图的模型可使用以下形式：
+
+```bash
+curl "https://api.zhangyuapi.com/v1/images/edits" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "model=YOUR_IMAGE_MODEL" \
+  -F "image[]=@/path/to/a.png" \
+  -F "image[]=@/path/to/b.png" \
+  -F "prompt=融合两张参考图" \
+  -F "response_format=url"
+```
+
+标准 URL 响应示例：
+
+```json
+{
+  "data": [
+    {
+      "url": "https://api.zhangyuapi.com/media/随机图片ID"
+    }
+  ]
+}
 ```
