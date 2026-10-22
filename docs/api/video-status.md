@@ -1,6 +1,6 @@
 # <span class="api-method get">GET</span> 获取视频生成任务状态
 
-查询视频生成任务的状态和结果。
+查询由[创建视频生成任务](/api/video)接口返回的任务状态和结果。[异步视频任务](/api/videos-async)须使用其对应的查询接口。
 
 任务状态：
 
@@ -29,7 +29,7 @@
 ## 请求示例
 
 ```bash
-curl -X GET "https://api.zhangyuapi.com/v1/video/generations/string" \
+curl -X GET "https://api.zhangyuapi.com/v1/video/generations/YOUR_TASK_ID" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

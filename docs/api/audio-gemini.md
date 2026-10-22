@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> 原生Gemini格式
+# <span class="api-method post">POST</span> Gemini 音频接口
 
-Gemini 音频生成接口。 可使用gemini-2.5-flash-preview-tts等模型
+使用 Gemini 协议生成音频。请使用当前 API Key 可用且支持音频生成的模型 ID。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>

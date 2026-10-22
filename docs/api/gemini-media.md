@@ -1,4 +1,4 @@
-# <span class="api-method post">POST</span> Gemini媒体识别
+# <span class="api-method post">POST</span> Gemini 多模态识别
 
 Gemini图像、PDF、音频、视频识别请求
 

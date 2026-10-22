@@ -89,5 +89,5 @@ console.log(await response.json());
 ```
 
 ::: tip 模型 ID
-请从 [模型广场](https://zhangyuapi.com/pricing) 或 `/v1/models` 获取模型 ID，不要长期依赖示例中的固定名称。
+模型可用性可能调整，请从 [模型广场](https://zhangyuapi.com/pricing) 或 `/v1/models` 获取当前账号可用的模型 ID。
 :::

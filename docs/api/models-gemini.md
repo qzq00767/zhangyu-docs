@@ -1,4 +1,4 @@
-# <span class="api-method get">GET</span> 原生Gemini格式
+# <span class="api-method get">GET</span> 模型列表（Gemini 格式）
 
 以 Gemini API 格式返回可用模型列表
 

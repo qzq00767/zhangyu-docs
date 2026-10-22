@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> 原生OpenAI格式
+# <span class="api-method post">POST</span> 内容审核
 
-检查文本内容是否违反使用政策
+对输入文本进行内容安全审核。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -26,6 +26,7 @@
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/moderations" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
   "input": "string"

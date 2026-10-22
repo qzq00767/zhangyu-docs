@@ -2,7 +2,7 @@
 
 获取已完成视频任务的视频文件内容。
 
-此接口会代理返回视频文件流。
+响应体为视频文件二进制内容。请先通过[视频任务查询接口](/api/video-sora-status)确认生成完成。
 
 <div class="api-endpoint">
   <span class="api-method get">GET</span>
@@ -24,8 +24,9 @@
 ## 请求示例
 
 ```bash
-curl -X GET "https://api.zhangyuapi.com/v1/videos/string/content" \
-  -H "Authorization: Bearer YOUR_API_KEY"
+curl -X GET "https://api.zhangyuapi.com/v1/videos/YOUR_TASK_ID/content" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  --output video.mp4
 ```
 
 ## 响应体
@@ -35,11 +36,9 @@ curl -X GET "https://api.zhangyuapi.com/v1/videos/string/content" \
 | `200` | `video/mp4` |
 | `404` | `application/json` |
 
-### 200 响应示例
+### 成功响应
 
-```text
-"string"
-```
+HTTP `200` 返回视频文件内容，可直接写入本地文件。
 
 ### 404 响应示例
 

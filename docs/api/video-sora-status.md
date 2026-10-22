@@ -2,7 +2,7 @@
 
 OpenAI 兼容的视频任务状态查询接口。
 
-返回视频任务的详细状态信息。
+使用[创建视频](/api/video-sora)接口返回的任务 ID 查询。任务完成后，可通过[获取视频内容](/api/video-sora-content)下载视频文件。
 
 <div class="api-endpoint">
   <span class="api-method get">GET</span>
@@ -24,7 +24,7 @@ OpenAI 兼容的视频任务状态查询接口。
 ## 请求示例
 
 ```bash
-curl -X GET "https://api.zhangyuapi.com/v1/videos/string" \
+curl -X GET "https://api.zhangyuapi.com/v1/videos/YOUR_TASK_ID" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

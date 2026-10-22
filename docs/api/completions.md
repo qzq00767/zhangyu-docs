@@ -1,4 +1,4 @@
-# <span class="api-method post">POST</span> 原生OpenAI格式
+# <span class="api-method post">POST</span> 文本补全
 
 基于给定提示创建文本补全
 

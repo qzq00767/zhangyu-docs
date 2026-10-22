@@ -1,6 +1,8 @@
-# <span class="api-method get">GET</span> 获取微调任务详情 (未实现)
+# <span class="api-method get">GET</span> 获取微调任务详情（暂未开放）
 
-此接口尚未实现
+::: warning 暂未开放
+此接口暂未开放，调用返回 HTTP `501`。
+:::
 
 <div class="api-endpoint">
   <span class="api-method get">GET</span>
@@ -22,7 +24,8 @@
 ## 请求示例
 
 ```bash
-curl -X GET "https://api.zhangyuapi.com/v1/fine-tunes/string"
+curl -X GET "https://api.zhangyuapi.com/v1/fine-tunes/YOUR_TASK_ID" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ## 响应体

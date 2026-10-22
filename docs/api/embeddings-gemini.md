@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> 原生Gemini格式
+# <span class="api-method post">POST</span> 按模型路径创建嵌入
 
-使用指定引擎/模型创建嵌入
+通过路径中的模型或引擎 ID 创建文本嵌入。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -33,12 +33,12 @@
 ## 请求示例
 
 ```bash
-curl -X POST "https://api.zhangyuapi.com/v1/engines/string/embeddings" \
+curl -X POST "https://api.zhangyuapi.com/v1/engines/YOUR_EMBEDDING_MODEL/embeddings" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "text-embedding-ada-002",
-    "input": "string"
+    "model": "YOUR_EMBEDDING_MODEL",
+    "input": "用于语义检索的示例文本"
   }'
 ```
 

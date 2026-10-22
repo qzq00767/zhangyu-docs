@@ -1,56 +1,99 @@
-# 异步生成视频与本地保存
+# 异步生成视频
 
-提交任务后立即返回本地任务 ID，服务在后台调用 New API 的视频生成接口、查询进度并保存视频。只有本地保存成功后，任务才返回自己的视频链接。
+提交视频生成任务后，接口返回任务 ID。客户端通过查询接口获取进度，任务状态为 `succeeded` 时取得视频访问地址。视频有效期为保存完成后 12 小时。
 
-这是新增的独立接口。原有 `/v1/video/generations`、`/v1/videos`、Kling、即梦等接口保持原样；调用原接口不会自动启用本页的本地保存功能。当前包装接口支持 New API 的两种标准视频协议，不直接包装 Kling、即梦的专有路径。
+本接口支持 `generations` 和 `videos` 两种视频生成协议，统一使用 JSON 提交任务。Kling、即梦专用接口及需要上传二进制参考图的请求，请使用对应的[视频接口](/api/#视频-videos)。
 
-## 入口与鉴权
+## 接口地址
 
-两个入口共用任务库，提交和查询可以使用不同入口：
+| 操作 | 方法 | 路径 |
+|---|---|---|
+| 提交任务 | `POST` | `/async-videos/v1/tasks` |
+| 查询任务 | `GET` | `/async-videos/v1/tasks/{task_id}` |
+| 仅重试视频保存 | `POST` | `/async-videos/v1/tasks/{task_id}/retry-save` |
+| 读取视频 | `GET` / `HEAD` | `/video-media/{task_id}`，使用成功结果返回的完整 URL |
 
-```text
-https://api.zhangyuapi.com
-https://zhangyuapi.com
-```
+推荐使用 `https://api.zhangyuapi.com`。`https://zhangyuapi.com` 同样支持本接口，两个入口共用任务，查询时须使用提交任务的同一枚 API Key。
 
-提交、查询和重试保存均使用原来的 New API Key：
+::: tip 接口路径
+完整提交地址为 `https://api.zhangyuapi.com/async-videos/v1/tasks`，路径前无需额外添加 `/v1`。
+:::
+
+## 鉴权与幂等
+
+提交、查询和重试保存均使用平台 API Key：
 
 ```http
-Authorization: Bearer YOUR_NEW_API_KEY
+Authorization: Bearer YOUR_API_KEY
 ```
 
-查询和重试保存需要使用提交任务时的同一枚 Key。成功后的 `/video-media/` 链接无需鉴权，持有链接的人可以访问，请按临时分享链接保管。
-
-## 提交任务
+提交任务还须携带以下请求头：
 
 ```http
-POST /async-videos/v1/tasks
 Content-Type: application/json
-Authorization: Bearer YOUR_NEW_API_KEY
 Idempotency-Key: video-order-20261022-001
 ```
 
-| 字段 | 要求 |
-|---|---|
-| `api_format` | 可选，默认 `generations`；另一取值为 `videos` |
-| `model` | 必填，使用你的渠道实际支持的视频模型名称，1～256 字符 |
-| `prompt` | 必填，1～32000 字符，模型可能有更低限制 |
-| `n` | 可选，只支持 `1`，每个任务保存一个视频 |
-| 其他字段 | 按模型和所选协议的要求传入，例如 `duration`、`seconds`、`size`、`metadata` |
+`Idempotency-Key` 为客户端分配的请求标识，长度为 8～128 个字符，允许英文字母、数字及 `_.:-`。建议使用 UUID 或业务订单号。
 
-`api_format: "generations"` 将其余字段以 JSON 提交到 New API 的 `/v1/video/generations`。`api_format: "videos"` 则将其余字段转换为 multipart 文本字段，提交到 `/v1/videos`；对象和数组编码为 JSON 文本。当前包装接口不接收二进制参考图上传，也不会把图片 URL 自动转换为上传文件。需要文件上传的原生调用请继续使用原接口。
+- 同一枚 API Key、相同幂等键和相同参数返回原任务，避免重复生成。
+- 相同幂等键提交不同参数返回 HTTP `409`。
+- 提交超时或连接中断时，应保留原始请求体和幂等键，重试同一次提交。
+- 修改参数或发起新的生成请求时，应使用新的幂等键。新任务可能产生新的费用。
 
-请求体最大 1 MiB；不支持 `stream: true`。可选参数是否有效取决于实际模型、渠道及 New API 的适配，不同协议的参数不能直接混用。
+## 提交任务
 
-```bash
-curl https://api.zhangyuapi.com/async-videos/v1/tasks \
-  -H "Authorization: Bearer YOUR_NEW_API_KEY" \
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/async-videos/v1/tasks</code>
+</div>
+
+### 请求参数
+
+请求体为 JSON，最大 1 MiB。不支持 `stream: true`，生成进度通过查询接口获取。
+
+| 参数 | 必填 | 说明 |
+|---|:---:|---|
+| `api_format` | 否 | 视频生成协议，默认 `generations`；可选值为 `generations`、`videos` |
+| `model` | 是 | 当前 API Key 可用的视频模型 ID，1～256 个字符 |
+| `prompt` | 是 | 视频内容描述，1～32000 个字符；模型可能有更低的长度限制 |
+| `n` | 否 | 仅支持 `1`，每个任务生成并保存一个视频 |
+| 其他参数 | 否 | 按模型和所选协议传入，例如 `duration`、`seconds`、`size`、`metadata` |
+
+| `api_format` | 参数协议 | 说明 |
+|---|---|---|
+| `generations` | [`/v1/video/generations`](/api/video) | 使用该协议的 JSON 参数，如 `duration` |
+| `videos` | [`/v1/videos`](/api/video-sora) | 使用该协议的参数，如 `seconds`、`size`；本接口仍以 JSON 接收请求，再转换为 multipart 文本字段，对象和数组编码为 JSON 文本 |
+
+可选参数的支持范围取决于模型和所选协议，不同协议的字段应分别配置。本接口不接收二进制文件，也不将图片 URL 自动转换为上传文件；需要上传参考图时，请使用对应的视频生成接口。
+
+### 请求示例
+
+将 `YOUR_API_KEY` 和 `YOUR_VIDEO_MODEL` 替换为实际密钥及模型 ID。以下示例使用默认的 `generations` 协议。
+
+::: code-group
+
+```bash [curl / Bash]
+curl -i -X POST "https://api.zhangyuapi.com/async-videos/v1/tasks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: video-order-20261022-001" \
   -d '{"api_format":"generations","model":"YOUR_VIDEO_MODEL","prompt":"海浪缓慢拍打沙滩，镜头平稳移动","n":1}'
 ```
 
-返回 HTTP `202`，表示任务已持久化接收，尚未保证上游接收或生成成功：
+```bat [Windows CMD]
+curl -i -X POST "https://api.zhangyuapi.com/async-videos/v1/tasks" ^
+  -H "Authorization: Bearer YOUR_API_KEY" ^
+  -H "Content-Type: application/json" ^
+  -H "Idempotency-Key: video-order-20261022-001" ^
+  -d "{\"api_format\":\"generations\",\"model\":\"YOUR_VIDEO_MODEL\",\"prompt\":\"海浪缓慢拍打沙滩，镜头平稳移动\",\"n\":1}"
+```
+
+:::
+
+### 接收响应
+
+接收成功返回 HTTP `202`，表示任务已接收，生成结果需通过查询接口确认。
 
 ```json
 {
@@ -63,32 +106,43 @@ curl https://api.zhangyuapi.com/async-videos/v1/tasks \
 }
 ```
 
-`created_at` 和成功后的 `expires_at` 是 Unix 秒时间戳。任务 ID 是本地 ID，不应拿它调用原生视频查询接口。保存 `id` 和 `status_url`，按响应的 `Retry-After` 查询，默认每 5 秒一次。
+保存 `id` 和 `status_url`。任务 ID 仅用于本页异步接口，查询时可直接使用返回的相对 `status_url`，与 API 根地址拼接为完整请求地址。
 
-幂等键必须为 8～128 个字母、数字、`_`、`.`、`:` 或 `-`。同一 Key、同一幂等键和相同参数返回原任务；参数变化返回 `409`。提交超时请使用同一个幂等键和相同参数重试。更换幂等键代表新的生成请求，可能再次计费。
+`created_at` 和 `expires_at` 均为 Unix 秒级时间戳。视频保存完成后，`expires_at` 返回具体到期时间。
 
 ## 查询任务
 
+<div class="api-endpoint">
+  <span class="api-method get">GET</span>
+  <code>https://api.zhangyuapi.com/async-videos/v1/tasks/{task_id}</code>
+</div>
+
+使用提交任务的同一枚 API Key，无需 `Idempotency-Key`。
+
 ```bash
-curl https://api.zhangyuapi.com/async-videos/v1/tasks/vid_0123456789abcdef0123456789abcdef \
-  -H "Authorization: Bearer YOUR_NEW_API_KEY"
+curl "https://api.zhangyuapi.com/async-videos/v1/tasks/vid_0123456789abcdef0123456789abcdef" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-HTTP `200` 只表示取得任务状态，必须继续检查 JSON 中的 `status`：
+建议按响应的 `Retry-After` 查询，默认每 5 秒一次。HTTP `200` 表示已取得任务状态，生成是否完成应以 JSON 中的 `status` 为准。
 
-| 状态 | 含义与处理 |
-|---|---|
-| `queued` | 等待后台提交 |
-| `submitting` | 正在向上游提交，请继续查询 |
-| `generating` | 上游排队或生成中，请继续查询 |
-| `saving` | 生成完成，正在下载到本地，请继续查询 |
-| `succeeded` | 本地保存完成，可读取 `data[0].url` |
-| `save_failed` | 保存失败，可仅重试保存 |
-| `failed` | 上游明确拒绝、生成失败或超过等待期限，请检查错误码 |
-| `indeterminate` | 提交结果不确定；不要自动重新生成，先核实上游记录 |
-| `expired` | 已过期，不能再读取本地结果 |
+### 任务状态
 
-`progress` 依赖上游提供的信息，不保证持续变化；保存完成前最多为 99，成功后为 100。只有 `succeeded` 返回结果：
+| `status` | 含义 | 客户端处理 |
+|---|---|---|
+| `queued` | 等待处理 | 继续查询 |
+| `submitting` | 正在提交生成请求 | 继续查询 |
+| `generating` | 等待模型处理或生成中 | 继续查询 |
+| `saving` | 生成完成，正在保存视频 | 继续查询 |
+| `succeeded` | 视频已保存成功 | 读取 `data[0].url`，停止查询 |
+| `save_failed` | 视频保存失败 | 停止查询，可调用“仅重试视频保存”接口 |
+| `failed` | 请求被拒绝、生成失败或超过等待期限 | 停止查询，检查 `error.code` |
+| `indeterminate` | 无法确认生成请求的提交结果 | 停止查询，先核对使用日志，避免重复生成和计费 |
+| `expired` | 任务或视频已过期 | 停止查询，原视频链接不可继续使用 |
+
+`progress` 根据模型返回的信息更新，可能在一段时间内保持不变。保存完成前最大为 `99`，成功后为 `100`。仅 `succeeded` 状态返回视频结果。
+
+### 成功结果
 
 ```json
 {
@@ -108,38 +162,59 @@ HTTP `200` 只表示取得任务状态，必须继续检查 JSON 中的 `status`
 }
 ```
 
-视频链接支持 GET、HEAD 和字节 Range 请求，供客户端播放、拖动和下载。文件链接没有扩展名，客户端应使用 `content_type` 识别类型。需要长期保存时，请在到期前下载到自己的存储。
+| 字段 | 说明 |
+|---|---|
+| `data[0].url` | 视频完整访问地址 |
+| `data[0].size` | 视频文件大小，单位为字节 |
+| `data[0].content_type` | 视频媒体类型，如 `video/mp4` |
 
-## 仅重试保存
+## 读取与保存视频
+
+任务成功后，可通过 `data[0].url` 播放或下载视频。视频访问无需 `Authorization` 请求头，任何持有有效链接的用户均可访问，请妥善保管链接。
+
+视频有效期为**保存完成后 12 小时**，具体到期时间以 `expires_at` 为准。链接过期后，访问返回 HTTP `410`。如需长期保存，请在有效期内下载视频。
+
+视频地址支持 `GET`、`HEAD` 和字节 `Range` 请求，可用于播放、进度拖动及下载。文件类型以 `content_type` 为准，保存时应使用对应的 `.mp4` 或 `.webm` 扩展名。请直接使用返回的完整 URL，无需追加文件扩展名。
+
+## 仅重试视频保存
+
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/async-videos/v1/tasks/{task_id}/retry-save</code>
+</div>
+
+仅 `save_failed` 状态可调用。使用提交任务的同一枚 API Key：
 
 ```bash
-curl -X POST \
-  https://api.zhangyuapi.com/async-videos/v1/tasks/vid_0123456789abcdef0123456789abcdef/retry-save \
-  -H "Authorization: Bearer YOUR_NEW_API_KEY"
+curl -X POST "https://api.zhangyuapi.com/async-videos/v1/tasks/vid_0123456789abcdef0123456789abcdef/retry-save" \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-仅 `save_failed` 状态可调用，成功接收返回 HTTP `202`。它只重新获取已有任务的视频内容，不重新调用生成接口。上游视频已过期、格式不支持或文件超过 512 MiB 时，重试仍可能失败。
+接收成功返回 HTTP `202`，随后继续查询同一任务。此操作仅重试获取和保存已有视频，不重新发起生成请求。源视频已过期、格式不支持或文件超过 512 MiB 时，重试仍可能失败。
 
-`failed` 和 `indeterminate` 不支持自动重新生成。服务在提交前记录一次性提交边界；如果提交时连接中断或服务重启，无法确认结果时标记 `indeterminate`，避免自动重复付费。
+`failed` 和 `indeterminate` 状态不支持通过此接口重新生成。提交期间发生连接中断等异常且结果无法确认时，任务会标记为 `indeterminate`，系统不自动重新提交生成请求。
 
-## 当前限制
+## 限制与错误处理
 
-| 项目 | 配置 |
+| 项目 | 当前限制或行为 |
 |---|---|
-| 单视频文件 | 最大 512 MiB，即 536870912 字节 |
-| 格式 | MP4、WebM 文件头校验 |
-| 单任务数量 | 一个视频 |
-| 后台工作线程 | 4 路，生成提交、查询和下载共用 |
-| 视频缓存预算 | 3 GiB，包含已有视频和任务预留 |
-| 单任务空间预留 | 最大视频大小加 1 MiB，约 513 MiB |
-| 容量保护 | 空缓存时约可同时接纳 5 个最大预留任务；已有视频会继续占用额度 |
-| 系统盘保护 | 任务预留后至少保留 6 GiB 可用空间；下载期间继续检查 |
-| 上游生成等待 | 从本地任务创建起最多 2 小时 |
-| 单次视频下载 | 最多 30 分钟，且不得超过任务当前有效期 |
-| 保存失败自动重试 | 最多尝试 3 次；超大或不支持的格式直接标记保存失败 |
-| 视频有效期 | 本地保存完成后 12 小时，到期访问立即返回 HTTP `410` |
-| 物理清理 | 每小时一次，过期文件通常在随后一小时内删除 |
+| 请求体 | 最大 1 MiB |
+| 单任务视频数 | 1 个 |
+| 单个视频文件 | 最大 512 MiB（536870912 字节） |
+| 支持格式 | MP4、WebM |
+| 生成等待 | 从任务创建起最多 2 小时 |
+| 单次视频下载 | 最长 30 分钟，且不得超过任务当前有效期 |
+| 保存失败自动重试 | 最多尝试 3 次；文件超限或格式不支持时直接标记为保存失败 |
+| 视频有效期 | 保存完成后 12 小时，到期访问返回 HTTP `410` |
 
-视频使用独立服务和目录 `/opt/video-async/data/videos/`，图片仍使用原来的服务、20 MiB 单图片限制和配置上限 200。提高视频文件上限不会提高图片文件上限，也不代表当前服务器能同时下载 200 个大视频。
+任务接收数量受处理能力和可用存储容量限制。视频与图片分别适用各自的文件大小限制，图片限制请参阅[异步生成图像](/api/images-async#限制与错误处理)。
 
-提交、查询或重试保存的 HTTP 错误使用 `{"detail":"错误码"}`；已接收任务的失败原因则在查询响应的 `error.code` 中。存储预算不足返回 `503` 与 `video_storage_capacity_reached`，无需立即更换幂等键反复重试。
+提交、查询或重试保存的 HTTP 错误通过 `detail` 返回错误码，例如：
+
+```json
+{
+  "detail": "video_storage_capacity_reached"
+}
+```
+
+存储容量不足时，接口返回 HTTP `503` 和 `video_storage_capacity_reached`。请稍后复用原幂等键和请求体重试。已接收任务的失败原因通过查询响应中的 `error.code` 返回，应结合任务状态处理。

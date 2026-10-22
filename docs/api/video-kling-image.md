@@ -1,10 +1,8 @@
 # <span class="api-method post">POST</span> Kling 图生视频
 
-可灵格式
+使用 Kling（可灵）协议，根据参考图片创建视频生成任务。
 
-使用 Kling 模型从图片生成视频。
-
-支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。
+支持通过 `image` 参数传入图片 URL 或 Base64 编码的图片数据。提交成功后，请使用返回的任务 ID 调用[Kling 图生视频任务查询接口](/api/video-kling-image-status)。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -42,5 +40,11 @@
 curl -X POST "https://api.zhangyuapi.com/kling/v1/videos/image2video" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{
+    "model": "YOUR_KLING_MODEL",
+    "image": "https://example.com/reference.png",
+    "prompt": "保持主体一致，镜头缓慢向前移动"
+  }'
 ```
+
+示例图片地址须替换为可访问的实际图片 URL。

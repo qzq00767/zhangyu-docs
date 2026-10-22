@@ -1,8 +1,8 @@
-# <span class="api-method post">POST</span> Gemini文本聊天
+# <span class="api-method post">POST</span> Gemini 文本生成
 
-代理 Gemini API 请求。 路径格式: `/v1beta/models/{model_name}:{action}`
+使用 Gemini 协议创建模型响应。路径格式为 `/v1beta/models/{model_name}:{action}`。
 
-例如:
+路径示例：
 
 *   `/v1beta/models/gemini-2.5-pro:generateContent`
 *   `/v1beta/models/gemini-2.5-pro:streamGenerateContent?alt=sse`

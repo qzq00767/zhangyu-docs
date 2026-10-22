@@ -22,7 +22,7 @@ const sidebar = {
           text: '音频（Audio）',
           collapsed: true,
           items: [
-            { text: '原生Gemini格式 POST', link: '/api/audio-gemini' },
+            { text: 'Gemini 音频接口 POST', link: '/api/audio-gemini' },
             { text: '文本转语音 POST', link: '/api/audio-tts' },
             { text: '音频转录 POST', link: '/api/audio-transcribe' },
             { text: '音频翻译 POST', link: '/api/audio-translation' },
@@ -32,24 +32,24 @@ const sidebar = {
           text: '聊天（Chat）',
           collapsed: true,
           items: [
-            { text: '原生Claude格式 POST', link: '/api/claude-messages' },
-            { text: 'Gemini媒体识别 POST', link: '/api/gemini-media' },
-            { text: 'Gemini文本聊天 POST', link: '/api/gemini' },
-            { text: 'ChatCompletions格式 POST', link: '/api/chat' },
-            { text: 'Responses格式 POST', link: '/api/responses' },
+            { text: 'Claude 对话 POST', link: '/api/claude-messages' },
+            { text: 'Gemini 多模态识别 POST', link: '/api/gemini-media' },
+            { text: 'Gemini 文本生成 POST', link: '/api/gemini' },
+            { text: 'Chat Completions POST', link: '/api/chat' },
+            { text: 'Responses POST', link: '/api/responses' },
           ],
         },
         {
           text: '补全（Completions）',
           collapsed: true,
-          items: [{ text: '原生OpenAI格式 POST', link: '/api/completions' }],
+          items: [{ text: '文本补全 POST', link: '/api/completions' }],
         },
         {
           text: '嵌入（Embeddings）',
           collapsed: true,
           items: [
-            { text: '原生OpenAI格式 POST', link: '/api/embeddings' },
-            { text: '原生Gemini格式 POST', link: '/api/embeddings-gemini' },
+            { text: '创建文本嵌入 POST', link: '/api/embeddings' },
+            { text: '按模型路径创建嵌入 POST', link: '/api/embeddings-gemini' },
           ],
         },
         {
@@ -59,8 +59,8 @@ const sidebar = {
             { text: '生成图像 POST', link: '/api/images' },
             { text: '异步生成图像', link: '/api/images-async' },
             { text: '编辑图像 POST', link: '/api/images-edit' },
-            { text: 'Gemini原生格式 POST', link: '/api/images-gemini' },
-            { text: 'OpenAI聊天格式 POST', link: '/api/images-gemini-chat' },
+            { text: '图像生成（Gemini）POST', link: '/api/images-gemini' },
+            { text: '图像生成（Chat）POST', link: '/api/images-gemini-chat' },
             { text: '生成图像 POST', link: '/api/images-qwen' },
             { text: '编辑图像 POST', link: '/api/images-qwen-edit' },
           ],
@@ -69,19 +69,19 @@ const sidebar = {
           text: '模型（Models）',
           collapsed: true,
           items: [
-            { text: '原生OpenAI格式 GET', link: '/api/models' },
-            { text: '原生Gemini格式 GET', link: '/api/models-gemini' },
+            { text: 'OpenAI 格式 GET', link: '/api/models' },
+            { text: 'Gemini 格式 GET', link: '/api/models-gemini' },
           ],
         },
         {
           text: '审查（Moderations）',
           collapsed: true,
-          items: [{ text: '原生OpenAI格式 POST', link: '/api/moderations' }],
+          items: [{ text: '内容审核 POST', link: '/api/moderations' }],
         },
         {
           text: '实时语音（Realtime）',
           collapsed: true,
-          items: [{ text: '原生OpenAI格式 GET', link: '/api/realtime' }],
+          items: [{ text: '实时语音 GET', link: '/api/realtime' }],
         },
         {
           text: '重排序（Rerank）',
@@ -89,7 +89,7 @@ const sidebar = {
           items: [{ text: '文档重排序 POST', link: '/api/rerank' }],
         },
         {
-          text: '未实现（Unimplemented）',
+      text: '暂未开放',
           collapsed: true,
           items: [
             {
@@ -120,7 +120,7 @@ const sidebar = {
           text: '视频（Videos）',
           collapsed: true,
           items: [
-            { text: '异步视频与本地保存', link: '/api/videos-async' },
+            { text: '异步生成视频', link: '/api/videos-async' },
             { text: '创建视频生成任务 POST', link: '/api/video' },
             { text: '获取任务状态 GET', link: '/api/video-status' },
             { text: '即梦视频生成 POST', link: '/api/video-jimeng' },

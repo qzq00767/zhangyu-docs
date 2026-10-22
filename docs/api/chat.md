@@ -1,4 +1,4 @@
-# <span class="api-method post">POST</span> ChatCompletions格式
+# <span class="api-method post">POST</span> 对话补全（Chat Completions）
 
 根据对话历史创建模型响应。支持流式和非流式响应。
 
@@ -47,13 +47,14 @@
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/chat/completions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-  "model": "gpt-4",
+  "model": "YOUR_MODEL_ID",
   "messages": [
     {
-      "role": "system",
-      "content": "string"
+      "role": "user",
+      "content": "请简要介绍机器学习。"
     }
   ]
 }'

@@ -1,6 +1,8 @@
-# <span class="api-method get">GET</span> 获取文件内容 (未实现)
+# <span class="api-method get">GET</span> 获取文件内容（暂未开放）
 
-此接口尚未实现
+::: warning 暂未开放
+此接口暂未开放，调用返回 HTTP `501`。
+:::
 
 <div class="api-endpoint">
   <span class="api-method get">GET</span>

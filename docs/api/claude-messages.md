@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> 原生Claude格式
+# <span class="api-method post">POST</span> Claude 对话（Messages）
 
-Anthropic Claude Messages API 格式的请求。 需要在请求头中包含 `anthropic-version`。
+使用 Anthropic Messages 协议创建 Claude 对话响应，请求头须包含 `anthropic-version`。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -18,7 +18,7 @@ Anthropic Claude Messages API 格式的请求。 需要在请求头中包含 `an
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|:---:|---|
 | `anthropic-version` | string | 是 | Anthropic API 版本 |
-| `x-api-key` | string | 否 | Anthropic API Key (可选，也可使用 Bearer Token) |
+| `x-api-key` | string | 否 | 平台 API Key，可替代 Bearer Token 进行鉴权 |
 
 ## 请求体
 
@@ -28,7 +28,7 @@ Anthropic Claude Messages API 格式的请求。 需要在请求头中包含 `an
 |---|---|:---:|---|
 | `model` | string | 是 | - |
 | `messages` | - | 是 | - |
-| `system` | string\| | 否 | - |
+| `system` | string\|array&lt;object&gt; | 否 | 系统提示词，可使用文本或内容块数组 |
 | `max_tokens` | integer | 是 | - |
 | `temperature` | number | 否 | - |
 | `top_p` | number | 否 | - |

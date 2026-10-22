@@ -1,10 +1,8 @@
 # <span class="api-method post">POST</span> Kling 文生视频
 
-可灵格式
+使用 Kling（可灵）协议，根据文本描述创建视频生成任务。可用模型以当前 API Key 的模型权限为准。
 
-使用 Kling 模型从文本描述生成视频。
-
-支持的模型：kling-v1, kling-v1-5 等
+提交成功后，请使用返回的任务 ID 调用[Kling 文生视频任务查询接口](/api/video-kling-text-status)。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -42,5 +40,8 @@
 curl -X POST "https://api.zhangyuapi.com/kling/v1/videos/text2video" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{
+    "model": "YOUR_KLING_MODEL",
+    "prompt": "海浪缓慢拍打沙滩，镜头平稳移动"
+  }'
 ```

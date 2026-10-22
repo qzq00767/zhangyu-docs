@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> OpenAI聊天格式
+# <span class="api-method post">POST</span> 图像生成（Chat Completions）
 
-Gemini 图片生成
+通过 Chat Completions 路径调用图像生成模型。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>

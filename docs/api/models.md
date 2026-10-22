@@ -1,4 +1,4 @@
-# <span class="api-method get">GET</span> 原生OpenAI格式
+# <span class="api-method get">GET</span> 模型列表（OpenAI 格式）
 
 获取当前可用的模型列表。
 
@@ -23,15 +23,15 @@
 
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|:---:|---|
-| `key` | string | 否 | Google API Key (用于 Gemini 格式) |
+| `key` | string | 否 | 平台 API Key，用于 Gemini 兼容鉴权 |
 
 ## 请求头参数
 
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|:---:|---|
-| `x-api-key` | string | 否 | Anthropic API Key (用于 Claude 格式) |
+| `x-api-key` | string | 否 | 平台 API Key，用于 Anthropic 兼容鉴权 |
 | `anthropic-version` | string | 否 | Anthropic API 版本 |
-| `x-goog-api-key` | string | 否 | Google API Key (用于 Gemini 格式) |
+| `x-goog-api-key` | string | 否 | 平台 API Key，用于 Gemini 兼容鉴权 |
 
 ## 请求示例
 

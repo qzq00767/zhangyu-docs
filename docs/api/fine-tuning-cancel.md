@@ -1,6 +1,8 @@
-# <span class="api-method post">POST</span> 取消微调任务 (未实现)
+# <span class="api-method post">POST</span> 取消微调任务（暂未开放）
 
-此接口尚未实现
+::: warning 暂未开放
+此接口暂未开放，调用返回 HTTP `501`。
+:::
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>

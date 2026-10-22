@@ -1,4 +1,4 @@
-# <span class="api-method post">POST</span> Gemini原生格式
+# <span class="api-method post">POST</span> 图像生成（Gemini）
 
 Gemini 图片生成
 

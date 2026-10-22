@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> 原生OpenAI格式
+# <span class="api-method post">POST</span> 创建文本嵌入
 
-将文本转换为向量嵌入
+将文本转换为向量嵌入，可用于语义检索和相似度计算。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -28,10 +28,11 @@
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/embeddings" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "text-embedding-ada-002",
-    "input": "string"
+    "model": "YOUR_EMBEDDING_MODEL",
+    "input": "用于语义检索的示例文本"
   }'
 ```
 

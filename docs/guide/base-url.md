@@ -1,6 +1,6 @@
 # API 地址与密钥
 
-## 先区分网站地址和 API 地址
+## 网站与 API 地址
 
 | 用途 | 地址 |
 |------|------|
@@ -8,13 +8,13 @@
 | OpenAI 兼容 Base URL | `https://api.zhangyuapi.com/v1` |
 | Anthropic / Gemini 协议根地址 | `https://api.zhangyuapi.com` |
 
-::: warning 不要混用
+::: warning 地址用途
 `zhangyuapi.com` 主要用于网页和控制台，`api.zhangyuapi.com` 用于程序调用。本文示例使用控制台当前推荐的 API 地址；如果您的控制台展示了专属线路，请以控制台为准。
 :::
 
-## Base URL 怎么填
+## 配置 Base URL
 
-客户端对 Base URL 的拼接方式不同。先判断它会自动补哪一段路径：
+客户端对 Base URL 的拼接方式不同，请根据客户端自动补全的路径配置地址：
 
 | 使用场景 | 填写内容 | 最终请求示例 |
 |---------|---------|-------------|
@@ -24,7 +24,7 @@
 | curl / 直接 HTTP 请求 | 填完整端点 | `https://api.zhangyuapi.com/v1/chat/completions` |
 | OpenAI 兼容应用 | 通常填 `https://api.zhangyuapi.com/v1` | 由应用补 `/chat/completions` |
 
-### 简单判断方法
+### 路径配置规则
 
 - 客户端自动补 `/chat/completions`：填写带 `/v1` 的地址。
 - 客户端自动补 `/v1/messages` 或 `/v1beta/models`：填写不带 `/v1` 的根地址。
@@ -69,7 +69,7 @@ Authorization: Bearer YOUR_API_KEY
 
 ## 连通性测试
 
-Models API 的请求体最简单，适合验证地址和鉴权：
+Models API 无需请求体，适合验证地址和鉴权：
 
 ```bash
 curl "https://api.zhangyuapi.com/v1/models" \

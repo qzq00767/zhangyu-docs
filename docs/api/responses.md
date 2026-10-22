@@ -1,6 +1,6 @@
-# <span class="api-method post">POST</span> Responses格式
+# <span class="api-method post">POST</span> 模型响应（Responses）
 
-OpenAI Responses API，用于创建模型响应。 支持多轮对话、工具调用、推理等功能。
+使用 OpenAI Responses 协议创建模型响应。多轮对话、工具调用和推理等功能的支持范围取决于所选模型。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -36,9 +36,11 @@ OpenAI Responses API，用于创建模型响应。 支持多轮对话、工具�
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/responses" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "string"
+    "model": "YOUR_MODEL_ID",
+    "input": "请简要介绍机器学习。"
   }'
 ```
 
@@ -59,31 +61,27 @@ curl -X POST "https://api.zhangyuapi.com/v1/responses" \
   "model": "string",
   "output": [
     {
-      "type": "string",
+      "type": "message",
       "id": "string",
-      "status": "string",
-      "role": "string",
+      "status": "completed",
+      "role": "assistant",
       "content": [
         {
-          "type": "string",
-          "text": "string"
+          "type": "output_text",
+          "text": "机器学习是通过数据训练模型，使其能够识别规律并完成预测或生成任务。",
+          "annotations": []
         }
       ]
     }
   ],
   "usage": {
-    "prompt_tokens": 0,
-    "completion_tokens": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
     "total_tokens": 0,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "text_tokens": 0,
-      "audio_tokens": 0,
-      "image_tokens": 0
+    "input_tokens_details": {
+      "cached_tokens": 0
     },
-    "completion_tokens_details": {
-      "text_tokens": 0,
-      "audio_tokens": 0,
+    "output_tokens_details": {
       "reasoning_tokens": 0
     }
   }

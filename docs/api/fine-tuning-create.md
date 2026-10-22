@@ -1,6 +1,8 @@
-# <span class="api-method post">POST</span> 创建微调任务 (未实现)
+# <span class="api-method post">POST</span> 创建微调任务（暂未开放）
 
-此接口尚未实现
+::: warning 暂未开放
+此接口暂未开放，调用返回 HTTP `501`。
+:::
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -21,6 +23,7 @@
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/fine-tunes" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{}'
 ```

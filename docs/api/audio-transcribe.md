@@ -30,6 +30,6 @@
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/audio/transcriptions" \
   -H "Authorization: Bearer YOUR_API_KEY" \
-  -F file="string" \
-  -F model="whisper-1"
+  -F "file=@/path/to/audio.mp3" \
+  -F "model=YOUR_AUDIO_MODEL"
 ```

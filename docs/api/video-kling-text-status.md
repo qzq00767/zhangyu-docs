@@ -22,7 +22,7 @@
 ## 请求示例
 
 ```bash
-curl -X GET "https://api.zhangyuapi.com/kling/v1/videos/text2video/string" \
+curl -X GET "https://api.zhangyuapi.com/kling/v1/videos/text2video/YOUR_TASK_ID" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

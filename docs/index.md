@@ -93,6 +93,8 @@ curl "https://api.zhangyuapi.com/v1/chat/completions" \
 | OpenAI Responses | [Responses API](/api/responses) | `/v1/responses` |
 | Anthropic Messages | [Claude Messages](/api/claude-messages) | `/v1/messages` |
 | Gemini 原生格式 | [Gemini API](/api/gemini) | `/v1beta/models/*` |
+| 异步图像生成 | [异步生成图像](/api/images-async) | `/async-images/v1/tasks` |
+| 异步视频生成 | [异步生成视频](/api/videos-async) | `/async-videos/v1/tasks` |
 | 图片、音频、向量 | 查看左侧对应分类 | 按具体页面说明 |
 
 不同模型支持的参数和能力可能不同。上线前请使用目标模型完成非流式、流式、工具调用及多模态等实际场景测试。

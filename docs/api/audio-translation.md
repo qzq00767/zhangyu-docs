@@ -1,6 +1,6 @@
 # <span class="api-method post">POST</span> 音频翻译
 
-将音频翻译为英文文本
+将音频内容翻译为英文文本。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -30,6 +30,6 @@
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/audio/translations" \
   -H "Authorization: Bearer YOUR_API_KEY" \
-  -F file="string" \
-  -F model="string"
+  -F "file=@/path/to/audio.mp3" \
+  -F "model=YOUR_AUDIO_MODEL"
 ```

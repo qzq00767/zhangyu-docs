@@ -2,7 +2,9 @@
 
 提交视频生成任务，支持文生视频和图生视频。
 
-返回任务 ID，可通过 GET 接口查询任务状态。
+提交成功后返回任务 ID，请通过[任务查询接口](/api/video-status)获取状态和结果。
+
+如需统一的结果保存和视频下载地址，请使用[异步生成视频](/api/videos-async)。本页任务须通过对应协议的查询接口获取结果。
 
 <div class="api-endpoint">
   <span class="api-method post">POST</span>
@@ -38,6 +40,10 @@
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/video/generations" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{
+    "model": "YOUR_VIDEO_MODEL",
+    "prompt": "海浪缓慢拍打沙滩，镜头平稳移动"
+  }'
 ```
