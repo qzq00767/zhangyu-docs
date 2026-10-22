@@ -120,6 +120,7 @@ const sidebar = {
           text: '视频（Videos）',
           collapsed: true,
           items: [
+            { text: '异步视频与本地保存', link: '/api/videos-async' },
             { text: '创建视频生成任务 POST', link: '/api/video' },
             { text: '获取任务状态 GET', link: '/api/video-status' },
             { text: '即梦视频生成 POST', link: '/api/video-jimeng' },

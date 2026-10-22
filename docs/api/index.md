@@ -92,6 +92,7 @@ AI 图像生成接口。
 
 AI 视频生成接口。
 
+- <span class="api-method post">POST</span> [异步生成视频与本地保存](/api/videos-async) `/async-videos/v1/tasks`
 - <span class="api-method post">POST</span> [创建视频生成任务](/api/video) `/v1/video/generations`
 - <span class="api-method get">GET</span> [获取视频生成任务状态](/api/video-status) `/v1/video/generations/{task_id}`
 - <span class="api-method post">POST</span> [即梦视频生成](/api/video-jimeng) `/jimeng/`
