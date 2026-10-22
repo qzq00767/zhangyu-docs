@@ -5,24 +5,28 @@
   <code>https://api.zhangyuapi.com/v1/images/edits/</code>
 </div>
 
-支持 `api.zhangyuapi.com` 和 `zhangyuapi.com` 两个入口，路径末尾有无 `/` 均可。继续使用原来的 Key、模型和调用参数。
+根据参考图片和提示词生成编辑结果，可选用蒙版指定编辑区域。支持 `api.zhangyuapi.com` 和 `zhangyuapi.com` 两个入口，路径末尾有无 `/` 均可。
 
 ## 图片链接与保存
 
-此接口同步等待模型生成，标准响应中的 `data[].url` 统一改为 `https://api.zhangyuapi.com/media/随机图片ID`，后台立即缓存图片。打开链接时可边下载边转发，不必等待整张图片保存完毕。上游返回 `b64_json` 时保持原样，不额外保存 Base64 图片。
+同步接口等待模型处理完成后返回结果。响应采用 URL 格式时，通过 `data[].url` 获取图片访问地址；采用 Base64 格式时，直接读取 `b64_json`。
 
-图片链接从生成结果就绪起有效 **12 小时**，到期返回 `410`，磁盘文件每小时清理。需要长期使用的图片请在有效期内保存到自己的存储。
+请使用返回的完整图片 URL。如需长期保存，请及时下载图片。
 
-需要提交后轮询结果时，使用下方的 [异步图片编辑](#异步图片编辑)。同步路径不会通过 `async:true` 自动切换。
+如需提交后轮询结果，请使用[异步图片编辑](#异步图片编辑)。在同步请求中添加 `async: true` 不会切换为异步任务。
 
 ## 异步图片编辑
 
-```text
-POST https://api.zhangyuapi.com/async-images/v1/edits
-POST https://zhangyuapi.com/async-images/v1/edits
-```
+<div class="api-endpoint">
+  <span class="api-method post">POST</span>
+  <code>https://api.zhangyuapi.com/async-images/v1/edits</code>
+</div>
 
-接收完整参考图、蒙版和表单后返回 HTTP `202` 与任务 ID，后台调用 `/v1/images/edits` 生成、保存图片。查询及重试保存与 [异步文生图](/api/images-async) 共用接口。
+完整上传参考图片、可选蒙版和表单参数后，接口返回 HTTP `202` 及任务 ID。随后使用[异步任务查询接口](/api/images-async#查询任务)获取状态和结果。
+
+### 提交示例
+
+将 `YOUR_API_KEY`、`YOUR_IMAGE_MODEL` 和文件路径替换为实际值。使用 `-F` 提交表单时，无需手动设置 `Content-Type`。
 
 ```bash
 curl "https://api.zhangyuapi.com/async-images/v1/edits" \
@@ -35,32 +39,46 @@ curl "https://api.zhangyuapi.com/async-images/v1/edits" \
   -F "n=1"
 ```
 
-`mask` 可省略；多图模型可改为重复提交 `image[]`。上传限制与下方同步编辑一致。请求头中的 `Idempotency-Key` 必填，为 8～128 位英文字母、数字或 `_.:-`。同一次提交重试时沿用原值，保持文件内容、文件名、字段顺序和参数不变；multipart 边界可以改变。同一枚 Key 下文生图和编辑任务也共用幂等键空间，更换操作或参数应使用新值。
+`mask` 为可选字段。支持多图的模型可重复提交 `image[]`，上传要求见[下表](#上传要求)。
+
+### 幂等要求
+
+请求头须包含 `Idempotency-Key`，长度为 8～128 个字符，允许英文字母、数字及 `_.:-`。
+
+- 重试同一次提交时，复用原幂等键，并保持文件内容、文件名、字段顺序和参数不变；multipart boundary 可由客户端重新生成。
+- 同一枚 API Key 下，文生图和图片编辑共用幂等键空间。更换操作、文件或参数时，须使用新的幂等键。
+- 提交超时或连接中断时，任务仍可能已被接收。请复用原请求重试，避免重复创建任务。
+
+### 接收与查询
 
 成功接收示例：
 
 ```json
 {
-  "id": "img_任务ID",
+  "id": "img_0123456789abcdef0123456789abcdef",
   "status": "queued",
-  "created_at": "UTC时间",
+  "created_at": "2026-10-22T04:00:00Z",
   "expires_at": null,
-  "status_url": "/async-images/v1/tasks/img_任务ID"
+  "status_url": "/async-images/v1/tasks/img_0123456789abcdef0123456789abcdef"
 }
 ```
 
-建议每 3 秒查询一次：
+保存 `id` 和 `status_url`，使用提交任务的同一枚 API Key 查询。建议按响应的 `Retry-After` 查询，默认每 3 秒一次：
 
 ```bash
-curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_任务ID" \
+curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_0123456789abcdef0123456789abcdef" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-`status` 为 `succeeded` 后，从 `data[].url` 获取自己域名的图片链接。异步编辑中，上游返回 URL 或 Base64 都会先保存，再统一返回图片链接；保存完成后有效 12 小时，每小时清理。生成失败或结果不确定时不会自动重新生成；`save_failed` 只能通过 `/async-images/v1/tasks/{task_id}/retry-save` 重试保存。
+HTTP `200` 表示已取得任务状态。`status` 为 `succeeded` 时，通过 `data[].url` 获取图片访问地址，图片有效期以 `expires_at` 为准。异步编辑成功结果统一返回 URL，不受模型原始响应格式影响。
 
-参考图和蒙版在排队期间加密保存在服务器，生成处理结束后释放。同步上传和异步排队输入共用 768 MiB 上传预算；因此 200 是任务与工作线程配置上限，不代表可同时接收 200 个最大上传。上传预算不足时返回 `429`，磁盘余量不足时返回 `503`。
+`save_failed` 状态可调用[保存重试接口](/api/images-async#仅重试图片保存)，无需重新生成。任务状态为 `failed` 或 `indeterminate` 时，应先检查错误和使用日志，避免重复提交。完整状态说明参阅[任务状态](/api/images-async#任务状态)。
 
-上游支持 JSON 编辑格式时，也可向这个新地址提交 `application/json`，上限 256 KiB，其余参数保持该模型原格式。暂不提供回调、生成阶段 SSE 或任务取消功能。
+### JSON 请求
+
+所选模型支持 JSON 编辑请求时，也可向 `/async-images/v1/edits` 提交 `application/json`，请求体最大 256 KiB，字段按模型要求填写。
+
+异步编辑暂不提供回调、生成阶段 SSE 或任务取消功能。
 
 ## 鉴权
 
@@ -74,37 +92,35 @@ curl "https://api.zhangyuapi.com/async-images/v1/tasks/img_任务ID" \
 
 | 参数 | 类型 | 必填 | 说明 |
 |---|---|:---:|---|
-| `image` | file | 是 | - |
-| `mask` | file | 否 | - |
+| `image` | file | 是 | 参考图片文件，支持的格式取决于模型。 |
+| `mask` | file | 否 | 编辑区域蒙版，具体要求取决于模型。 |
 | `prompt` | string | 是 | 所需图像的文本描述。最大长度为 1000 个字符。 |
 | `n` | string | 否 | 要生成的图像数。必须介于 1 和 10 之间。 |
 | `size` | string | 否 | 生成图像的大小。必须是`256x256`、`512x512`或 `1024x1024`之一。 |
 | `response_format` | string | 否 | 生成的图像返回的格式。必须是`url`或`b64_json`。 |
 | `user` | string | 否 | 最终用户的唯一标识符，用于区分调用来源。 |
-| `model` | string | 否 | - |
+| `model` | string | 否 | 当前 API Key 可用且支持图片编辑的模型 ID，建议显式指定。 |
 
-参考图字段支持 `image`、重复的 `image[]`、`images` 或 `images[]`；具体字段名和多图能力以所用模型为准。参考图、蒙版及其他表单字段会保留后转发给 New API。
+参考图字段支持 `image`、重复的 `image[]`、`images` 或 `images[]`；具体字段名和多图能力以所选模型为准。异步编辑使用相同的表单提交方式，参数支持范围以模型为准。
 
-## 中转限制
+## 上传要求
 
 | 项目 | 限制 |
 |---|---|
 | multipart 请求总大小 | 128 MiB，包含表单开销 |
 | 单个上传文件 | 50 MiB |
 | 参考图数量 | 最多 16 张，模型可能有更低限制 |
-| 同时接收上传 | 4 路；繁忙时返回 `429` |
-| 生成并发 | 与同步文生图共享 200 上限，并受存储预留限制 |
-| 上传接收总时限 | 300 秒 |
 | 返回 URL 图片大小 | 单张最多 20 MiB |
-| JSON 编辑请求 | 最多 256 KiB，需上游模型支持相应 JSON 格式 |
+| JSON 编辑请求 | 最多 256 KiB，需模型支持相应 JSON 格式 |
 
-`stream` 请省略或设为 `false`。图片文件的流式转发不需要设置 `stream:true`。返回 `429` 或 `503` 时遵循 `Retry-After`；已提交生成后超时，不要自动重提以免重复计费。
+`stream` 请省略或设为 `false`。返回 `429` 或 `503` 时，请按 `Retry-After` 等待后重试。同步请求提交后超时，应先核对使用日志；异步请求应复用原幂等键和请求内容重试。
 
 ## 请求示例
 
 ```bash
 curl -X POST "https://api.zhangyuapi.com/v1/images/edits/" \
   -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "model=YOUR_IMAGE_MODEL" \
   -F "image=@/path/to/image.png" \
   -F "prompt=将背景替换为海边风景"
 ```
@@ -127,7 +143,7 @@ curl "https://api.zhangyuapi.com/v1/images/edits" \
 {
   "data": [
     {
-      "url": "https://api.zhangyuapi.com/media/随机图片ID"
+      "url": "https://api.zhangyuapi.com/media/0123456789abcdef0123456789abcdef01234567"
     }
   ]
 }
