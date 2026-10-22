@@ -199,6 +199,21 @@ export default defineConfig({
   title: '章鱼公益平台开发文档',
   description: '章鱼公益平台 API 接入、SDK 配置、应用集成与故障排查文档',
   lang: 'zh-CN',
+  appearance: {
+    initialValue: 'light',
+  },
+  transformHtml(html) {
+    // Apply the saved theme and canvas color before blocking stylesheets load.
+    const themeScript = html.match(/<script id="check-dark-mode">[\s\S]*?<\/script>/)?.[0]
+    if (!themeScript) return html
+
+    return html.replace(themeScript, '').replace(
+      '<head>',
+      `<head>
+    ${themeScript}
+    <style id="theme-background">html{background:#ffffff;color-scheme:light}html.dark{background:#11151b;color-scheme:dark}</style>`,
+    )
+  },
   head: [
     ['link', { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon.png' }],
     ['meta', { name: 'theme-color', content: '#ffffff' }],
